@@ -1,0 +1,74 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='...')
+    meta(name='author', content='Łukasz Holeczek')
+    meta(name='keyword', content='Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,jQuery,CSS,HTML,RWD,Dashboard')
+    link(rel='shortcut icon', href='img/favicon.png')
+    title SiSyn Corp Tool
+    // Icons
+    link(href='/fonts/font-awesome.min.css', rel='stylesheet')
+    link(href='/fonts/simple-line-icons.css', rel='stylesheet')
+    // Main styles for this application
+    link(href='/css/style.css', rel='stylesheet')
+    
+  body.app.eader-fixed.sidebar-fixed.aside-menu-fixed.aside-menu-hidden
+    header.app-header.navbar
+      button.navbar-toggler.mobile-sidebar-toggler.d-lg-none.mr-auto(type='button')
+        span.navbar-toggler-icon
+      a.navbar-brand(href='#')
+      button.navbar-toggler.sidebar-toggler.d-md-down-none(type='button')
+        span.navbar-toggler-icon
+      
+      ul.nav.navbar-nav.ml-auto.mr-3
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle.nav-link(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false')
+            img.img-avatar(src='img/avatars/6.jpg', alt='admin@bootstrapmaster.com')
+            span.d-md-down-none admin
+          .dropdown-menu.dropdown-menu-right
+            .dropdown-header.text-center
+              strong Settings
+            a.dropdown-item(href='#')
+              i.fa.fa-user
+              |  Profile
+
+
+    .app-body
+      .sidebar
+        nav.sidebar-nav
+          ul.nav
+            li.nav-item
+              a.nav-link(href='index.html')
+                i.icon-speedometer
+                |  Dashboard 
+                span.badge.badge-info NEW
+            li.nav-item
+              a.nav-link(href='...') LINK2
+      // Main content
+      main.main
+        // Breadcrumb
+        ol.breadcrumb
+          | BREAD
+        .container-fluid
+          != messages('message', locals)
+          if errors
+            each error, i in errors
+              div(class="alert alert-danger") #{error.msg}
+        br
+        .container-fluid
+          #ui-view
+            block content
+      aside.aside-menu
+        | ...
+    footer.app-footer
+      | FOOTER
+    // Bootstrap and necessary plugins
+    script(src='/js/jquery-3.2.1.min.js')
+    script(src='/js/popper.1.12.8.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/pace.min.js')
+    // Main scripts
+    script(src='/js/app.js')

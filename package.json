@@ -1,0 +1,26 @@
+{
+  "name": "sirius",
+  "version": "1.0.0",
+  "description": "Sirius Syndicate Corp Tool",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "Michael Bender",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "connect-flash": "^0.1.1",
+    "express": "^4.16.2",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.15.6",
+    "express-validator": "^4.3.0",
+    "mongoose": "^4.13.4",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.0-rc.4",
+    "winston": "^2.4.0",
+    "winston-daily-rotate-file": "^1.7.2"
+  }
+}

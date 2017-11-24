@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="CoreUI Bootstrap 4 Admin Template">
+  <meta name="author" content="Lukasz Holeczek">
+  <meta name="keyword" content="CoreUI Bootstrap 4 Admin Template">
+  <!-- <link rel="shortcut icon" href="assets/ico/favicon.png"> -->
+
+  <title>Register User</title>
+
+  <!-- Icons -->
+  <link href="/static/fonts/font-awesome.min.css" rel="stylesheet">
+  <link href="/static/fonts/simple-line-icons.css" rel="stylesheet">
+
+  <!-- Main styles for this application -->
+  <link href="/static/css/style.css" rel="stylesheet">
+
+</head>
+
+{{#if errors}}
+  {{#each errors}}
+    <div class="alert alert-danger" role="alert">{{this.param}} {{this.msg}}</div>
+  {{/each}}
+{{/if}}
+
+<body class="app flex-row align-items-center">
+  <div clas3s="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card mx-4">
+          <div class="card-body p-4">
+            <h1>Benutzer Registrierung</h1>
+            <form method='POST', action='/users/register'>
+              <p class="text-muted">Erstelle deinen Benutzer</p>
+              <div class="input-group mb-3">
+                <span class="input-group-addon"><i class="icon-user"></i></span>
+                <input type="text" class="form-control is-invalid" placeholder="Benutzer" name="username">
+                  <div class="invalid-feedback">
+                    test
+                  </div>
+              </div>
+
+              <div class="input-group mb-3">
+                <span class="input-group-addon"><i class="icon-user"></i></span>
+                <input type="text" class="form-control" placeholder="Vorname" name="firstname">
+              </div>
+
+              <div class="input-group mb-3">
+                <span class="input-group-addon">@</span>
+                <input type="email" class="form-control" placeholder="Email" name="email">
+              </div>
+
+              <div class="input-group mb-3">
+                <span class="input-group-addon"><i class="icon-lock"></i></span>
+                <input type="password" class="form-control" placeholder="Passwort" name="password">
+              </div>
+
+              <div class="input-group mb-4">
+                <span class="input-group-addon"><i class="icon-lock"></i></span>
+                <input type="password" class="form-control" placeholder="Wiederhole Passwort" name="password2">
+              </div>
+              <button type="submit" class="btn btn-block btn-success">Benutzer erstellen</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap and necessary plugins -->
+  <script src="/static/js/jquery-3.2.1.min.js"></script>
+  <script src="/static/js/popper.1.12.8.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+</body>
+</html>

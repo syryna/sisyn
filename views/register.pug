@@ -1,0 +1,65 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='...')
+    meta(name='author', content='Łukasz Holeczek')
+    meta(name='keyword', content='Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,jQuery,CSS,HTML,RWD,Dashboard')
+    link(rel='shortcut icon', href='img/favicon.png')
+    title SiSyn Corp Tool
+    // Icons
+    link(href='/fonts/font-awesome.min.css', rel='stylesheet')
+    link(href='/fonts/simple-line-icons.css', rel='stylesheet')
+    // Main styles for this application
+    link(href='/css/style.css', rel='stylesheet')
+    
+  body.app.flex-row.align-items-center
+    .container-fluid
+      != messages('message', locals)
+    br
+    .container
+      .row.justify-content-center
+        .col-md-6
+          .card.mx-4
+            .card-body.p-4
+              h1 Registrierung
+              p.text-muted Erstelle dein Benutzerkonto
+              form(method='POST', action='/users/register')
+                .input-group.mb-3
+                  span.input-group-addon
+                    i.icon-user
+                  input.form-control(type='text', placeholder='Benutzer', name="username")
+                .input-group.mb-3
+                  span.input-group-addon
+                    i.icon-user
+                  input.form-control(type='text', placeholder='Vorname', name="firstname")
+                .input-group.mb-3
+                  span.input-group-addon @
+                  input.form-control(type='email', placeholder='E-Mail', name="email")
+                .input-group.mb-3
+                  span.input-group-addon
+                    i.icon-lock
+                  input.form-control(type='password', placeholder='Passwort', name="password")
+                .input-group.mb-4
+                  span.input-group-addon
+                    i.icon-lock
+                  input.form-control(type='password', placeholder='Passwort wiederholen', name="password2")
+                button.btn.btn-block.btn-success(type='submit') Benutzerkonto Erstellen
+
+    //my scripts
+    script(src='/js/frontend.js')
+
+    // Bootstrap and necessary plugins
+    script(src='/js/jquery-3.2.1.min.js')
+    script(src='/js/popper.1.12.8.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/pace.min.js')
+    // Main scripts
+    script(src='/js/app.js')
+    
+    // initialize input fields to reset is-invalid class
+    script(type='text/javascript').
+      var val_errors = !{errors ? JSON.stringify(errors) : "undefined"}; // short if  else
+      val_errors && validateRegisterForm(val_errors);                   // short if

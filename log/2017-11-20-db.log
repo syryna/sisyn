@@ -1,0 +1,3 @@
+{"level":"info","message":"Query on \"user\": {} Result: { _id: 5a12087aeedf2c1854a06048, username: 'TESTer' },{ _id: 5a1209f3eedf2c1854a0604d, username: 'TESTer2' }","timestamp":"23:31:07"}
+{"level":"info","message":"Query on \"user\": {} Result: { _id: 5a12087aeedf2c1854a06048, username: 'TESTer' },{ _id: 5a1209f3eedf2c1854a0604d, username: 'TESTer2' }","timestamp":"23:32:37"}
+{"level":"info","message":"Query on \"user\": {} Result: { _id: 5a12087aeedf2c1854a06048, username: 'TESTer' },{ _id: 5a1209f3eedf2c1854a0604d, username: 'TESTer2' }","timestamp":"23:34:54"}
