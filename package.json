@@ -16,11 +16,19 @@
     "express-messages": "^1.0.1",
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
-    "mongoose": "^4.13.4",
+    "mongoose": "^4.13.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.4",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syryna/sisyn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/syryna/sisyn/issues"
+  },
+  "homepage": "https://github.com/syryna/sisyn#readme"
 }
