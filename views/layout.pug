@@ -27,13 +27,17 @@ html(lang='en')
         li.nav-item.dropdown
           a.nav-link.dropdown-toggle.nav-link(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false')
             img.img-avatar(src='img/avatars/6.jpg', alt='admin@bootstrapmaster.com')
-            span.d-md-down-none admin
+            if user
+              span.d-md-down-none #{user.username}
           .dropdown-menu.dropdown-menu-right
             .dropdown-header.text-center
-              strong Settings
-            a.dropdown-item(href='#')
+              strong Einstellungen
+            a.dropdown-item(href='/users/profile')
               i.fa.fa-user
-              |  Profile
+              |  Profil
+            a.dropdown-item(href='/users/logout')
+              i.fa.fa-lock
+              |  Ausloggen
 
 
     .app-body

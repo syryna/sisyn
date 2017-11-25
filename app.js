@@ -1,33 +1,33 @@
 
-// Used components
+// Used Components
 const express = require('express');                     // App Server
 const mongoose = require('mongoose');                   // Mongo DB
 const bodyParser = require('body-parser');              // HTML Body Parser
-const expressValidator = require('express-validator');  // express Validation in Forms
-
-
+const expressValidator = require('express-validator');  // Express Validation in Forms
 // see middleware section  require('express-messages')  // send messages
 const session = require('express-session');             // server side storage
 const flash = require('connect-flash');                 // store messages in server storage
-
-const path = require('path');
+const path = require('path');                           // Path
 const winston = require('winston');                     // Logger
+const passport = require('passport');                   //Passport
+
+const config = require('./config/database');
 
 // Connect to Mongo DB
-const mongourl = 'mongodb://localhost/nodecorp';
-mongoose.connect(mongourl, { useMongoClient: true });       // connect to corp tool data
-let mongodb = mongoose.connection;
+const mongourl = config.database;
+mongoose.connect(mongourl, { useMongoClient: true });
+global.mongodb = mongoose.connection;                   // GLOBAL
 
 // Check connection to Mongo DB
 mongodb.once('open', function(err){
   if(err){
     applog.error('Connect to Mongo DB failed: ' + err);
   } else {
-    applog.info('Connected to Mongo DB: http://localhost:3001');
+    applog.info('Connected to Mongo DB: ' + mongourl);
   }
 });
 
-// check for DB errors
+// Check for DB errors
 mongodb.on('error', function(err){
   dblog.error('An Error occured: ' + err);
 });
@@ -45,65 +45,56 @@ if (!fs.existsSync(logDir)) {
 // Create Loggers
 const tsFormat = () => (new Date()).toLocaleTimeString();
 
-const applog = new (winston.Logger)({
-  transports: [
-    // colorize the output to the console
-    new (winston.transports.Console)({
-      timestamp: tsFormat,
-      colorize: true,
-      level: 'info'
-    }),
-    new (require('winston-daily-rotate-file'))({
-      filename: `${logDir}/-app.log`,
-      timestamp: tsFormat,
-      datePattern: 'yyyy-MM-dd',
-      prepend: true,
-      level: env === 'development' ? 'verbose' : 'info'
-    })
-  ]
-});
+  global.applog = new (winston.Logger)({                // GLOBAL
+    transports: [
+      new (winston.transports.Console)({
+        timestamp: tsFormat,
+        colorize: true,
+        level: 'info'
+      }),
+      new (require('winston-daily-rotate-file'))({
+        filename: `${logDir}/-app.log`,
+        timestamp: tsFormat,
+        datePattern: 'yyyy-MM-dd',
+        prepend: true,
+        level: env === 'development' ? 'verbose' : 'info'
+      })
+    ]
+  });
 
-const httplog = new (winston.Logger)({
-  transports: [
-    // colorize the output to the console
-    new (winston.transports.Console)({
-      timestamp: tsFormat,
-      colorize: true,
-      level: 'info'
-    }),
-    new (require('winston-daily-rotate-file'))({
-      filename: `${logDir}/-http.log`,
-      timestamp: tsFormat,
-      datePattern: 'yyyy-MM-dd',
-      prepend: true,
-      level: env === 'development' ? 'verbose' : 'info'
-    })
-  ]
-});
+  global.httplog = new (winston.Logger)({               // GLOBAL
+    transports: [
+      new (winston.transports.Console)({
+        timestamp: tsFormat,
+        colorize: true,
+        level: 'info'
+      }),
+      new (require('winston-daily-rotate-file'))({
+        filename: `${logDir}/-http.log`,
+        timestamp: tsFormat,
+        datePattern: 'yyyy-MM-dd',
+        prepend: true,
+        level: env === 'development' ? 'verbose' : 'info'
+      })
+    ]
+  });
 
-const dblog = new (winston.Logger)({
-  transports: [
-    // colorize the output to the console
-    new (winston.transports.Console)({
-      timestamp: tsFormat,
-      colorize: true,
-      level: 'info'
-    }),
-    new (require('winston-daily-rotate-file'))({
-      filename: `${logDir}/-db.log`,
-      timestamp: tsFormat,
-      datePattern: 'yyyy-MM-dd',
-      prepend: true,
-      level: env === 'development' ? 'verbose' : 'info'
-    })
-  ]
-});
-
-//logger.debug('Debugging info');
-//logger.verbose('Verbose info');
-//logger.info('Hello world');
-//logger.warn('Warning message');
-//logger.error('Error info');
+  global.dblog = new (winston.Logger)({                 // GLOBAL
+    transports: [
+      new (winston.transports.Console)({
+        timestamp: tsFormat,
+        colorize: true,
+        level: 'info'
+      }),
+      new (require('winston-daily-rotate-file'))({
+        filename: `${logDir}/-db.log`,
+        timestamp: tsFormat,
+        datePattern: 'yyyy-MM-dd',
+        prepend: true,
+        level: env === 'development' ? 'verbose' : 'info'
+      })
+    ]
+  });
 
 // Init App
 const app = express();
@@ -115,13 +106,9 @@ app.set('view engine', 'pug');
 // Bring in Models for Mongo DB
 let User = require('./models/user');
 
-
-
 // Body Perser Middleware
-//parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-// parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));  //parse application/x-www-form-urlencoded
+app.use(bodyParser.json());                           // parse application/json
 
 // Set public folder to serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -156,6 +143,17 @@ app.use(expressValidator({
     };
   }
 }));
+
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
+});
 
 // Routes for the App
 app.get("/", function(req, res){

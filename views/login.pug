@@ -25,7 +25,8 @@ html(lang='en')
           .card.mx-4
             .card-body.p-4
               h1 Anmeldung
-              p.text-muted Melde dich mit deinem Benutzerkonto an
+              p.text-muted Melde dich mit deinem Benutzerkonto an. Falls du keine Konto hast hier 
+                a(href='/users/register') registrieren.
               form(method='POST', action='/users/login')
                 .input-group.mb-3
                   span.input-group-addon
@@ -45,3 +46,8 @@ html(lang='en')
     script(src='/js/pace.min.js')
     // Main scripts
     script(src='/js/app.js')
+
+    // Change Passport Error Styles to Bootstrap Style
+    script(type='text/javascript').
+      $('.alert-error').addClass('alert-danger');
+      $('.alert-danger').removeClass('alert-error');

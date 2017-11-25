@@ -8,6 +8,7 @@ html(lang='en')
     meta(name='author', content='Łukasz Holeczek')
     meta(name='keyword', content='Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,jQuery,CSS,HTML,RWD,Dashboard')
     link(rel='shortcut icon', href='img/favicon.png')
+    script(src='https://www.google.com/recaptcha/api.js')
     title SiSyn Corp Tool
     // Icons
     link(href='/fonts/font-awesome.min.css', rel='stylesheet')
@@ -16,7 +17,7 @@ html(lang='en')
     link(href='/css/style.css', rel='stylesheet')
     
   body.app
-    .container-fluid
+    .container(id='error')
       != messages('message', locals)
     br
     .container
@@ -25,8 +26,9 @@ html(lang='en')
           .card.mx-4
             .card-body.p-4
               h1 Registrierung
-              p.text-muted Erstelle dein Benutzerkonto
-              form(method='POST', action='/users/register')
+              p.text-muted Erstelle dein Benutzerkonto. Falls du schon ein Konto hast, hier 
+                a(href='/users/login') Anmelden.
+              form(method='POST', action='/users/register' id='Form')
                 .input-group.mb-3
                   span.input-group-addon
                     i.icon-user
@@ -42,10 +44,14 @@ html(lang='en')
                   span.input-group-addon
                     i.icon-lock
                   input.form-control(type='password', placeholder='Passwort', name="password")
-                .input-group.mb-4
+                .input-group.mb-3
                   span.input-group-addon
                     i.icon-lock
                   input.form-control(type='password', placeholder='Passwort wiederholen', name="password2")
+                .input-group.mb-4.justify-content-center
+                  span.input-group-addon
+                    i.fa.fa-google
+                  .g-recaptcha(data-sitekey="6LdSUzoUAAAAALreqWmgqJX0IIWYwQ5m0X6DZ8S5")
                 button.btn.btn-block.btn-success(type='submit') Benutzerkonto Erstellen
 
     // Bootstrap and necessary plugins
@@ -56,14 +62,15 @@ html(lang='en')
     // Main scripts
     script(src='/js/app.js')
     
-    // initialize input fields to reset is-invalid class
+    // initialize input fields to reset is-invalid class and refill submitted values
     script(type='text/javascript').
+      // Form Error Validation
       function validateRegisterForm(errors){
         for (error of errors){
           $('input[name=' + error.param + ']').addClass('is-invalid');
           $('input[name=' + error.param + ']').closest('.input-group').after('<div class="invalid-feedback d-flex">' + error.msg + '</div><br>');
           $('input[name=' + error.param + ']').val(error.value);
-          //password is always red as it must be retyped always because of hash calculation
+          // Password is always red as it must be retyped always because of hash calculation
           $('input[name=password]').addClass('is-invalid');
           $('input[name=password]').val('');
           $('input[name=password2]').addClass('is-invalid');
@@ -78,3 +85,9 @@ html(lang='en')
       val_firstname && $('input[name=firstname]').val(val_firstname);
       var val_email = !{email ? JSON.stringify(email) : "undefined"};
       val_email && $('input[name=email]').val(val_email);
+      // reCaptcha Error Validation
+      var recaptchaerror = !{recaptchaerror ? JSON.stringify(recaptchaerror) : "undefined"};
+      if (recaptchaerror){
+        $('.g-recaptcha').addClass('border border-danger');
+        $('.g-recaptcha').closest('.input-group').after('<div class="invalid-feedback d-flex">' + recaptchaerror + '</div><br>');
+      }
