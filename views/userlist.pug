@@ -1,0 +1,52 @@
+extends layout
+
+block content
+    .row
+        .col
+            .card
+                .card-header
+                    i.icon-people 
+                    | Mitgliederliste
+                .card-body
+                    table.table.table-sm
+                        thead
+                            tr
+                                th Bild
+                                th Benutzer
+                                th Vorname
+                                th Alter
+                                th E-Mail
+                                th Status
+                                th Typ
+                                th Aktion
+                        tbody
+                            each user, i in users
+                                tr
+                                    if (user.picture != 'false')
+                                        td
+                                            img.img-avatar(src=user.picture)
+                                    else
+                                        td
+                                            img.img-avatar(src='/img/avatars/1_32.jpg')
+                                    td(data-toggle='tooltip', data-placement='bottom', title=user._id)= user.username
+                                    td= user.firstname
+                                    td= user.age
+                                    td= user.email
+                                    if (user.locked == true)
+                                        td
+                                            .span.badge.badge-danger gesperrt
+                                    else if (user.locked == false)
+                                        td
+                                            .span.badge.badge-success freigeschaltet
+                                    else 
+                                        td
+                                            .span.badge.badge-secondary unbekannt
+                                    td= user.type
+                                    td
+                                        a(href='/users/edit/'+user._id)
+                                            i.mr-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                                        a(href='#')
+                                            i.mr-3.fa.fa-close.text-danger.delete-user(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user._id)
+                                        i.mr-3.fa.fa-lock(data-toggle='tooltip', data-placement='bottom', title='Sperren')
+                                        i.mr-3.fa.fa-unlock(data-toggle='tooltip', data-placement='bottom', title='Freigeben')
+                                        i.mr-3.fa.fa-plus-square-o(data-toggle='tooltip', data-placement='bottom', title='Account hinzufügen')

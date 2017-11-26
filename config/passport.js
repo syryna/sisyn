@@ -11,7 +11,12 @@ module.exports = function(passport){
         User.findOne(query, function(err, user){
             if(err) throw err;
             if(!user){
-                return done(null, false, {message: 'Benutzerkonto nicht gefunden'});
+                return done(null, false, {message: 'Benutzerkonto nicht gefunden.'});
+            }
+
+            // User Locked
+            if(user.locked){
+                return done(null, false, {message: 'Benutzerkonto nicht freigegeben.'});
             }
 
             // Match password
@@ -20,7 +25,7 @@ module.exports = function(passport){
                 if(isMatch){
                     return done(null, user);
                 } else{
-                    return done(null, false, {message: 'Flasches Password'});
+                    return done(null, false, {message: 'Flasches Password eingegeben.'});
                 }
             });
         });

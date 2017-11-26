@@ -13,7 +13,7 @@ let User = require('../models/user');
 
 // Register Form
 router.get('/register', recaptcha.middleware.render, function(req, res){
-  httplog.info('Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
+  httplog.info('User: ' + 'undefined' + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
   res.render('register', {layout: false, captcha: res.recaptcha});
 });
 
@@ -47,15 +47,18 @@ router.post('/register', recaptcha.middleware.verify, function(req, res){
       firstname: firstname,
       email: email
     });
+    httplog.info('User: ' + 'undefined' + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
   // Validation Success
   } else {
     let newUser = new User({
       username:username,
       firstname:firstname,
+      age: '',
       email:email,
       password:password,
-      picture:'empty',
+      picture: '/img/avatars/1_32.jpg',
       locked: true,
+      type: 'Standard',
       regdate: new Date().toUTCString(),
       logindate:''
     });
@@ -72,6 +75,7 @@ router.post('/register', recaptcha.middleware.verify, function(req, res){
           } else {
             console.log('user registred');
             req.flash('success','Benutzer wurde angelegt. Der Administrator muss dich aber noch freischalten');
+            httplog.info('User: ' + 'undefined' + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl + ' Body: '+ JSON.stringify(req.body));
             res.redirect('/users/login');
           }
         });
@@ -82,6 +86,7 @@ router.post('/register', recaptcha.middleware.verify, function(req, res){
 
 // Login Form
 router.get('/login', function(req, res){
+  httplog.info('User: ' + 'undefined' + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
   res.render('login', {layout: false});
 });
 
@@ -93,13 +98,92 @@ router.post('/login', function(req, res, next){
     failureFlash: true,
     badRequestMessage: 'Kein Benutzerkonto oder Passwort eingegeben'
   })(req, res, next);
+  httplog.info('User: ' + 'undefined' + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
+});
+
+// Edit Form
+router.get('/edit/:id', function(req, res){
+  User.findById(req.params.id, function(err, user){
+    if (err){
+      console.log(err);
+      return;
+    } else {
+      httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
+      res.render('edit_user', {
+        user:user
+      });
+    }
+  });
+});
+
+// Edit Process
+router.post('/edit/:id', function(req, res){
+  let user = {};
+  // get submitted values 
+  user.username = req.body.username;
+  user.firstname = req.body.firstname;
+  user.age = req.body.age;
+  user.email = req.body.email;
+  user.picture = req.body.picture;
+
+  let query = {_id:req.params.id}
+
+  User.update(query, user, function(err){
+    if (err){
+      console.log(err);
+      return;
+    } else {
+      httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl + ' Body: '+ JSON.stringify(req.body));
+      res.redirect('/');
+    }
+  });
+});
+
+// Delete User
+router.delete('/:id', function(req, res){
+  if(!req.user._id){
+    res.status(500).send();
+  }
+
+  let query = {_id:req.params.id}
+
+  User.findById(req.params.id, function(err, user){
+    console.log(JSON.stringify(req.user));
+    console.log('user._id: "' + user._id  + '"');
+    if(user._id == req.user._id || req.user.type == 'Admin'){
+      User.remove(query, function(err){
+        if(err){
+          console.log(err);
+        }
+        res.send('Success');
+      });
+    } else {
+      res.status(500).send();
+    }
+  });
 });
 
 // Logout
 router.get('/logout', function(req, res){
   req.logout();
   req.flash('success', res.locals.user.username + ', du bist ausgeloggt');
+  httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
+  req.logout();
   res.redirect('/users/login');
+});
+
+// List all members
+router.get('/userlist', function(req, res){
+  User.find({}, function(err, users){
+    if(err){
+      console.log(err);
+    } else {
+      httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
+      res.render('userlist', {
+        users: users
+      });
+    }
+  });
 });
 
 module.exports = router;

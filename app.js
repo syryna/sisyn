@@ -161,7 +161,7 @@ app.get("/", function(req, res){
     {
       id:1,
       title:'Article One',
-      author:'Brad',
+      author: 'test',
       body:'This is body of one'
     },
     {
@@ -176,24 +176,8 @@ app.get("/", function(req, res){
     title:'Hello',
     articles:micha_array
   });
-});
+  httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
 
-app.get("/dashboard", function(req, res){
-  res.render("dashboard")
-});
-
-app.get("/corp_member", function(req, res){
-  let query = '{}';
-  User.find(query, function(err, users){
-    if(err){
-      dblog.error('Error finding Users: ' + err);
-    } else {
-      dblog.info('Query on "user": ' + query + ' Result: ' + users);
-      res.render("corp_member", {
-        users:users
-      });
-    }
-  });
 });
 
 // Route files

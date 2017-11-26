@@ -10,13 +10,15 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  age:{
+    type: String
+  },
   email:{
     type: String,
     required: true
   },
   password:{
-    type: String,
-    required: true
+    type: String
   },
   picture:{
     type: String,
@@ -24,6 +26,10 @@ const userSchema = mongoose.Schema({
   },
   locked:{
     type: Boolean,
+    required: true
+  },
+  type:{
+    type: String,
     required: true
   },
   regdate:{

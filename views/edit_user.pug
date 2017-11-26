@@ -1,0 +1,53 @@
+extends layout
+
+block content
+    .row.justify-content-center
+        .col-md-6
+            .card
+                .card-header
+                    i.icon-people 
+                    | Benutzerkonto
+                .card-body
+                    form(method='POST', action='/users/edit/'+user._id, id='Form')
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon ID
+                                input.form-control(type='text', value=user._id, name="id", disabled)
+                                span.input-group-addon
+                                    i.fa.fa-id-card-o
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Benutzer
+                                input.form-control(type='text', value=user.username, name="username")
+                                span.input-group-addon
+                                    i.icon-user
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Vorname
+                                input.form-control(type='text', value=user.firstname, name="firstname")
+                                span.input-group-addon
+                                    i.icon-user
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Alter
+                                input.form-control(type='text', value=user.age, name="age")
+                                span.input-group-addon
+                                    i.fa.fa-heart-o
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon E-Mail
+                                input.form-control(type='text', value=user.email, name="email")
+                                span.input-group-addon @
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Bild auswählen
+                                input.form-control(type='text', value=user.picture, name="picture")
+                                span.input-group-addon
+                                    i.fa.fa-photo
+                        a.change-picture(href='#')
+                            img(id='default', src='/img/avatars/1_32.jpg').img-thumbnail
+                        a.change-picture(href='#')
+                            img(id='2', src=user.picture).img-thumbnail
+                        p 
+                            small Standardmäßig hast du ein Bild-Platzhalter. Wenn du EVE Accounts eingetragen hast kannst du auswählen welches Bild deiner Charaktere du angezeigt bekommen möchtest. Du kannst auch manuell einen Link zu einem Bild angeben, das Bild sollte aber dann das Format 32x32 Pixel haben. Am besten nimmst du ein Bild vom EVE Bilderserver (https://image.eveonline.com/Character/CHARID_32.jpg)
+                        button.btn.btn-block.btn-success(type='submit') Benutzerkonto Speichern
