@@ -44,9 +44,15 @@ html(lang='en')
           .dropdown-menu.dropdown-menu-right
             .dropdown-header.text-center
               strong Einstellungen
-            a.dropdown-item(href='/users/profile')
+            a.dropdown-item(href='/users/edit/'+user._id)
               i.fa.fa-user
-              |  Profil
+              |  Profil ändern
+            a.dropdown-item(href='#'+user._id)
+              i.icon-lock
+              |  Passwört ändern
+            a.dropdown-item(href='#'+user._id)
+              i.fa.fa-rocket
+              |  EVE Konto hinzufügen
             a.dropdown-item(href='/users/logout')
               i.fa.fa-lock
               |  Ausloggen

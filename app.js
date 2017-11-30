@@ -9,7 +9,7 @@ const session = require('express-session');             // server side storage
 const flash = require('connect-flash');                 // store messages in server storage
 const path = require('path');                           // Path
 const winston = require('winston');                     // Logger
-const passport = require('passport');                   //Passport
+const passport = require('passport');                   // Passport
 
 const config = require('./config/database');
 
@@ -106,16 +106,16 @@ app.set('view engine', 'pug');
 // Bring in Models for Mongo DB
 let User = require('./models/user');
 
+// Set public folder to serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Body Perser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));  //parse application/x-www-form-urlencoded
 app.use(bodyParser.json());                           // parse application/json
 
-// Set public folder to serve static files
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Express Session Middleware
 app.use(session({
-  secret: 'keyboard cat',
+  secret: 'mysecretstuff',
   resave: true,
   saveUninitialized: true
 }))
@@ -156,7 +156,7 @@ app.get('*', function(req, res, next){
 });
 
 // Routes for the App
-app.get("/", function(req, res){
+app.get("/", ensureAuthenticated, function(req, res){
   let micha_array = [
     {
       id:1,
@@ -183,6 +183,17 @@ app.get("/", function(req, res){
 // Route files
 let users = require('./routes/users');
 app.use('/users', users);
+
+
+// Access Control
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('danger', 'Bitte erneut einloggen');
+    res.redirect('/users/login');
+  }
+}
 
 // Start express server
 app.listen(3001, function(err){

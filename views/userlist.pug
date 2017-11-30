@@ -43,10 +43,14 @@ block content
                                             .span.badge.badge-secondary unbekannt
                                     td= user.type
                                     td
-                                        a(href='/users/edit/'+user._id)
-                                            i.mr-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
-                                        a(href='#')
-                                            i.mr-3.fa.fa-close.text-danger.delete-user(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user._id)
-                                        i.mr-3.fa.fa-lock(data-toggle='tooltip', data-placement='bottom', title='Sperren')
-                                        i.mr-3.fa.fa-unlock(data-toggle='tooltip', data-placement='bottom', title='Freigeben')
-                                        i.mr-3.fa.fa-plus-square-o(data-toggle='tooltip', data-placement='bottom', title='Account hinzufügen')
+                                        if (user._id == current_user_id || current_user_type == 'Admin')
+                                            a(href='/users/edit/'+user._id)
+                                                i.mr-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                                            a(href='#')
+                                                i.mr-3.fa.fa-close.text-danger.delete-user(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user._id)
+                                        else
+                                            i.mr-3.fa.fa-pencil.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                                            i.mr-3.fa.fa-close.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user._id)
+                                            i.mr-3.fa.fa-lock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Sperren')
+                                            i.mr-3.fa.fa-unlock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Freigeben')
+                                            i.mr-3.fa.fa-plus-square-o.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Account hinzufügen')

@@ -45,9 +45,7 @@ block content
                                 span.input-group-addon
                                     i.fa.fa-photo
                         a.change-picture(href='#')
-                            img(id='default', src='/img/avatars/1_32.jpg').img-thumbnail
-                        a.change-picture(href='#')
-                            img(id='2', src=user.picture).img-thumbnail
+                            img(id=user._id, src=user.picture).img-thumbnail
                         p 
                             small Standardmäßig hast du ein Bild-Platzhalter. Wenn du EVE Accounts eingetragen hast kannst du auswählen welches Bild deiner Charaktere du angezeigt bekommen möchtest. Du kannst auch manuell einen Link zu einem Bild angeben, das Bild sollte aber dann das Format 32x32 Pixel haben. Am besten nimmst du ein Bild vom EVE Bilderserver (https://image.eveonline.com/Character/CHARID_32.jpg)
                         button.btn.btn-block.btn-success(type='submit') Benutzerkonto Speichern

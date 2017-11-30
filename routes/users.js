@@ -11,6 +11,9 @@ var recaptcha = new Recaptcha('6LdSUzoUAAAAALreqWmgqJX0IIWYwQ5m0X6DZ8S5', '6LdSU
 // Bring in User Models
 let User = require('../models/user');
 
+// Authentication Module
+//let shared = require('../shared.js');
+
 // Register Form
 router.get('/register', recaptcha.middleware.render, function(req, res){
   httplog.info('User: ' + 'undefined' + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
@@ -73,7 +76,6 @@ router.post('/register', recaptcha.middleware.verify, function(req, res){
             dblog.error('Error saving '+ newUser.username + ': ' + err);
             return;
           } else {
-            console.log('user registred');
             req.flash('success','Benutzer wurde angelegt. Der Administrator muss dich aber noch freischalten');
             httplog.info('User: ' + 'undefined' + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl + ' Body: '+ JSON.stringify(req.body));
             res.redirect('/users/login');
@@ -102,22 +104,28 @@ router.post('/login', function(req, res, next){
 });
 
 // Edit Form
-router.get('/edit/:id', function(req, res){
+router.get('/edit/:id', ensureAuthenticated, function(req, res){
   User.findById(req.params.id, function(err, user){
     if (err){
       console.log(err);
       return;
     } else {
-      httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
-      res.render('edit_user', {
-        user:user
-      });
+      // User Check
+      if (user._id == req.user.id || req.user.type == 'Admin'){
+        httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
+        res.render('edit_user', {
+          user:user
+        });
+      } else {
+        req.flash('danger','Nicht berechtigt !!');
+        res.redirect('/');
+      }
     }
   });
 });
 
 // Edit Process
-router.post('/edit/:id', function(req, res){
+router.post('/edit/:id', ensureAuthenticated, function(req, res){
   let user = {};
   // get submitted values 
   user.username = req.body.username;
@@ -141,16 +149,16 @@ router.post('/edit/:id', function(req, res){
 
 // Delete User
 router.delete('/:id', function(req, res){
-  if(!req.user._id){
+  if(!req.user.id){
     res.status(500).send();
   }
 
   let query = {_id:req.params.id}
 
   User.findById(req.params.id, function(err, user){
-    console.log(JSON.stringify(req.user));
-    console.log('user._id: "' + user._id  + '"');
-    if(user._id == req.user._id || req.user.type == 'Admin'){
+
+    // User Check
+    if (user._id == req.user.id || req.user.type == 'Admin'){
       User.remove(query, function(err){
         if(err){
           console.log(err);
@@ -164,7 +172,7 @@ router.delete('/:id', function(req, res){
 });
 
 // Logout
-router.get('/logout', function(req, res){
+router.get('/logout', ensureAuthenticated, function(req, res){
   req.logout();
   req.flash('success', res.locals.user.username + ', du bist ausgeloggt');
   httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
@@ -173,17 +181,29 @@ router.get('/logout', function(req, res){
 });
 
 // List all members
-router.get('/userlist', function(req, res){
+router.get('/userlist', ensureAuthenticated, function(req, res){
   User.find({}, function(err, users){
     if(err){
       console.log(err);
     } else {
       httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: '+ req.originalUrl);
       res.render('userlist', {
-        users: users
+        users: users,
+        current_user_id: req.user.id,
+        current_user_type: req.user.type
       });
     }
   });
 });
+
+// Access Control
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('danger', 'Bitte erneut einloggen');
+    res.redirect('/users/login');
+  }
+}
 
 module.exports = router;
