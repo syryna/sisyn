@@ -77,7 +77,7 @@ html(lang='en')
           $('input[name=password2]').val('');
         }
       }
-      var val_errors = !{errors ? JSON.stringify(errors) : "undefined"};
+      var val_errors = !{form_errors ? JSON.stringify(form_errors) : "undefined"};
       val_errors && validateRegisterForm(val_errors);
       var val_username = !{username ? JSON.stringify(username) : "undefined"};
       val_username && $('input[name=username]').val(val_username);

@@ -21,15 +21,36 @@ html(lang='en')
     script(src='/js/pace.min.js')
     // my JS
     script(src='/js/frontend.js')
-    
+    // my CSS
+    link(href='/css/my.css', rel='stylesheet')
+
   body.app.header-fixed.sidebar-fixed.aside-menu-fixed.aside-menu-hidden
+
+    //Modal Confirm
+    #dangerModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', style='display: none;', aria-hidden='true')
+      .modal-dialog.modal-danger(role='document')
+        .modal-content
+          .modal-header
+            h4.modal-title Bestätige Warnung
+            |         
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') &times;
+          |       
+          .modal-body
+            p Diese Aktion is nicht Rückgängig zu machen. Willst du fortfahren?
+          |       
+          .modal-footer
+            button.btn.btn-secondary(type='button', data-dismiss='modal') Abbrechen
+            |         
+            button.btn.btn-danger.danger-confirm(type='button') Fortfahren
+
     header.app-header.navbar
       button.navbar-toggler.mobile-sidebar-toggler.d-lg-none.mr-auto(type='button')
         span.navbar-toggler-icon
-      a.navbar-brand(href='#')
+      a.navbar-brand(href='/')
       button.navbar-toggler.sidebar-toggler.d-md-down-none(type='button')
         span.navbar-toggler-icon
-      
+
       ul.nav.navbar-nav.ml-auto.mr-3
         li.nav-item.dropdown
           a.nav-link.dropdown-toggle.nav-link(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false')
@@ -40,16 +61,13 @@ html(lang='en')
             else 
               img.img-avatar(src='/img/avatars/1_32.jpg')
             if user
-              span.d-md-down-none #{user.username}
+              strong.d-md-down-none #{user.username}
           .dropdown-menu.dropdown-menu-right
             .dropdown-header.text-center
               strong Einstellungen
             a.dropdown-item(href='/users/edit/'+user._id)
               i.fa.fa-user
               |  Profil ändern
-            a.dropdown-item(href='#'+user._id)
-              i.icon-lock
-              |  Passwört ändern
             a.dropdown-item(href='#'+user._id)
               i.fa.fa-rocket
               |  EVE Konto hinzufügen
@@ -63,7 +81,7 @@ html(lang='en')
         nav.sidebar-nav
           ul.nav
             li.nav-item
-              a.nav-link(href='#')
+              a.nav-link(href='/overview/show')
                 i.icon-speedometer
                 |  Übersicht 
                 //span.badge.badge-pill.badge-primary NEU
@@ -137,7 +155,7 @@ html(lang='en')
         // Breadcrumb
         ol.breadcrumb
           | BREAD
-        .container-fluid
+        .container-fluid(class='message')
           != messages('message', locals)
           if errors
             each error, i in errors
