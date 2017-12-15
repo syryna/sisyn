@@ -99,6 +99,8 @@ global.dblog = new(winston.Logger)({ // GLOBAL
 
 // Init App
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);// Socket.io for the chat
 
 // Load PUG View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -106,6 +108,7 @@ app.set('view engine', 'pug');
 
 // Bring in Models for Mongo DB
 let User = require('./models/user');
+let Chat = require('./models/chat');
 
 // Set public folder to serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -205,4 +208,72 @@ app.listen(3001, function(err) {
     } else {
         applog.info('Server up: http://localhost:3001');
     }
+});
+server.listen(3002, function(err) {
+    if (err) {
+        applog.error('SocketIO Server start failed: ' + err);
+    } else {
+        applog.info('SocketIO Server up: http://localhost:3002');
+    }
+});
+
+
+// Chat logic
+io.on('connection', function(client) {  
+
+    client.on('join', function(data) {
+        applog.info(data);
+        // boradcast all chat messages
+        Chat.aggregate(
+            { $lookup: { from: 'users', localField: 'userid', foreignField: '_id', as: 'userdata' } },
+            { $project: { userid: 1, username: 1, message: 1, timestamp: 1, picture: '$userdata.picture' } },
+            { $unwind : "$picture" },
+            { $limit: 100 },
+            { $sort: { timestamp: 1 } }
+            , function(err, messages) {
+            if (err) {
+                dblog.error('Error finding Chat Messages: ' + err);
+                return;
+            } else {
+                client.emit('broad', messages);
+                client.broadcast.emit('broad',messages);  
+            }
+        }); 
+    });
+
+    client.on('messages', function(data) {
+        // save chat in Mongo DB
+        const newMessage = new Chat({
+            userid: data.userid,
+            username: data.username,
+            message: data.text,
+            timestamp: new Date().toUTCString()
+        });
+        newMessage.save(function(err, message) {
+            if (err) {
+                dblog.error('Error saving new Chat Message: ' + newMessage.username + ' from User: ' + newMessage.userid + ': '  + err);
+                return;
+            } else {
+                dblog.info('Saving new Chat message: ' + JSON.stringify(newMessage));
+                // boradcast current chat message
+                Chat.aggregate(
+                    { $lookup: { from: 'users', localField: 'userid', foreignField: '_id', as: 'userdata' } },
+                    { $project: { userid: 1, username: 1, message: 1, timestamp: 1, picture: '$userdata.picture' } },
+                    { $unwind : "$picture" },
+                    { $match : { _id: message._id } }
+                    , function(err, messages) {
+                    if (err) {
+                        dblog.error('Error finding Chat Messages: ' + err);
+                        return;
+                    } else {
+                        client.emit('broad', messages);
+                        client.broadcast.emit('broad',messages);  
+                    }
+                }); 
+            }
+        });
+        
+        
+    });
+
 });

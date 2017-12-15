@@ -38,7 +38,7 @@ const userSchema = mongoose.Schema({
     },
     logindate: {
         type: Date
-    },
+    }
 });
 
 let User = module.exports = mongoose.model('User', userSchema);
