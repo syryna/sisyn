@@ -163,24 +163,7 @@ app.get('*', function(req, res, next) {
 
 // Routes for the App
 app.get("/", ensureAuthenticated, function(req, res) {
-    let micha_array = [{
-            id: 1,
-            title: 'Article One',
-            author: 'test',
-            body: 'This is body of one'
-        },
-        {
-            id: 2,
-            title: 'Article Two',
-            author: 'Micha',
-            body: 'This is body of TWO'
-        },
-    ];
-    req.flash('success', 'nur ein test');
-    res.render("index", {
-        title: 'Hello',
-        articles: micha_array
-    });
+    // Placeholder
     httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
 
 });
@@ -235,8 +218,7 @@ io.on('connection', function(client) {
                 dblog.error('Error finding Chat Messages: ' + err);
                 return;
             } else {
-                client.emit('broad', messages);
-                client.broadcast.emit('broad',messages);  
+                client.emit('broad', messages); 
             }
         }); 
     });

@@ -70,5 +70,6 @@ block content
         message.userid = '#{user._id}';
         message.username = '#{user.username}';
         socket.emit('messages', message);
+        $('#chatsend').val('');
       });
     });
