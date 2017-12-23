@@ -1,0 +1,200 @@
+extends layout
+
+block content
+  .row
+    .col-12
+      .card
+        .card-header
+          i.fa.fa-rss
+          | Account hinzufügen
+        .card-body
+            form(method='POST', action='/account/add/'+_id, id='Form')
+                .form-group
+                    .input-group.mb-3
+                        span.input-group-addon Account Nummer
+                        input.form-control(type='text', value=_id, name='id', readonly='readonly')
+                        span.input-group-addon
+                            i.fa.fa-id-card-o
+                p 
+                    small Ab dem dritten Zeichen wird während deiner Eingabe eine Suche bei EVE Online API durchgeführt. Das Ergebnis siehst du im Dropdown. Wähle den Character aus den du speichern möchtest.
+                .form-row
+                    .col
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Charakter 1
+                                input.form-control(type='text', id='character1' placeholder='Charname')
+                                span.input-group-addon
+                                    i.icon-user
+                            .input-group.mb-3
+                                span.input-group-addon Aufgabe
+                                input.form-control(type='text', id='usage1' placeholder='PVE, Miner, Orca Pilot, etc.')
+                                span.input-group-addon
+                                    i.fa.fa-wrench
+                            .input-group.mb-3
+                                span.input-group-addon In der Corp
+                                select.form-control(id='corp1')
+                                    option Ja
+                                    option Nein
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                    .col
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon
+                                    img(id='char1_pic', src='/img/avatars/1_32.jpg').img-thumbnail
+                                select.form-control(id='char1',size=5)
+                                span.input-group-addon
+                                    i.fa.fa-photo  
+                hr.mx-3.my-0
+                br
+                .form-row
+                    .col
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Charakter 2
+                                input.form-control(type='text', id='character2' placeholder='Charname')
+                                span.input-group-addon
+                                    i.icon-user
+                            .input-group.mb-3
+                                span.input-group-addon Aufgabe
+                                input.form-control(type='text', id='usage2' placeholder='PVE, Miner, Orca Pilot, etc.')
+                                span.input-group-addon
+                                    i.fa.fa-wrench
+                            .input-group.mb-3
+                                span.input-group-addon In der Corp
+                                select.form-control(id='corp2')
+                                    option Ja
+                                    option Nein
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                    .col
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon
+                                    img(id='char2_pic', src='/img/avatars/1_32.jpg').img-thumbnail
+                                select.form-control(id='char2',size=5)
+                                span.input-group-addon
+                                    i.fa.fa-photo
+                hr.mx-3.my-0
+                br
+                .form-row
+                    .col
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Charakter 3
+                                input.form-control(type='text', id='character3' placeholder='Charname')
+                                span.input-group-addon
+                                    i.icon-user
+                            .input-group.mb-3
+                                span.input-group-addon Aufgabe
+                                input.form-control(type='text', id='usage3' placeholder='PVE, Miner, Orca Pilot, etc.')
+                                span.input-group-addon
+                                    i.fa.fa-wrench
+                            .input-group.mb-3
+                                span.input-group-addon In der Corp
+                                select.form-control(id='corp3')
+                                    option Ja
+                                    option Nein
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                    .col
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon
+                                    img(id='char3_pic', src='/img/avatars/1_32.jpg').img-thumbnail
+                                select.form-control(id='char3',size=5)
+                                span.input-group-addon
+                                    i.fa.fa-photo
+                
+
+
+
+    script.
+        $(document).ready(function() {
+            var timeoutID = null;
+            var charIds = {};
+
+            function findCharacter(str) {
+                // GET Char IDs from EVE API
+                if (str.length > 3){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://esi.tech.ccp.is/latest/search/',
+                        data: {
+                            'categories': 'character', 
+                            'datasource': 'tranquility',
+                            'language': 'en-us',
+                            'search': str,
+                            'strict': 'false'
+                            },
+                        dataType: 'json',
+                        success: function(data) { 
+                            charIds = data;
+                            console.log('return: ' + JSON.stringify(charIds));
+
+                            // GET Char name of IDs from EVE API
+                            if ($.isArray(charIds.character)){
+                                console.log(charIds.character.toString());
+                                $.ajax({
+                                    type: 'GET',
+                                    url: 'https://esi.tech.ccp.is/latest/characters/names/',
+                                    data: {
+                                        'character_ids': charIds.character.toString()
+                                        },
+                                    dataType: 'json',
+                                    success: function(data) { 
+                                        charIds = data;
+                                        console.log('return2: ' + JSON.stringify(charIds));
+                                        // Fill Multiselect
+                                        $('#char1').empty();
+                                        var x = 0;
+                                        for (x in charIds){
+                                            $('#char1').append('<option value="' + charIds[x].character_id + '">' + charIds[x].character_name + '</option>');
+                                        }
+                                    },
+                                    error: function(req, error, details) { 
+                                        console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                                    },
+                                    beforeSend: setHeader
+                                });
+
+                                function setHeader(xhr) {
+                                    xhr.setRequestHeader('Content-Type', 'application/json');
+                                }
+                            }
+
+                        },
+                        error: function(req, error, details) { 
+                            console.log('error: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                        },
+                        beforeSend: setHeader
+                    });
+
+                    function setHeader(xhr) {
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                    }
+                }
+            }
+
+            // Listen on Changes
+            $('#character1, #character2, #character3').keyup(function(e) {
+                clearTimeout(timeoutID);
+                timeoutID = setTimeout(findCharacter.bind(undefined, e.target.value), 500);
+            });
+
+            // Get Clicked user
+            $('#char1, #char2, #char3').on('change', function () {
+                $('#char1 option:selected').each(function() {
+                    console.log('https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                    $("#char1_pic").attr('src' , 'https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                });  
+                $('#char2 option:selected').each(function() {
+                    console.log('https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                    $("#char2_pic").attr('src' , 'https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                });
+                $('#char3 option:selected').each(function() {
+                    console.log('https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                    $("#char3_pic").attr('src' , 'https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                });
+            });
+        });

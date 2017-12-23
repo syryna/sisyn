@@ -1,33 +1,30 @@
-// Get Clicked picture
 $(document).ready(function () {
+
+  // Get Clicked picture
   $('.change-picture').on('click', function (e) {
     $("input[name=picture]").val($("#" + e.target.id).attr("src"));
   });
-});
 
-// Delete User Ajax
-$(document).ready(function () {
+  // Delete User Ajax
   $('.delete-user').on('click', function (e) {
     $target = $(e.target);
     const id = $target.attr('data-id');
     $('#dangerModal').modal('show');
-    $('.danger-confirm').on ('click', function(){
+    $('.danger-confirm').on('click', function () {
       $.ajax({
         type: 'DELETE',
         url: '/users/' + id,
         success: function (response) {
           window.location.href = '/users/userlist';
         },
-        error: function (err) {
+      error: function (err) {
           console.log(err);
         }
       });
     });
   });
-});
 
-// Lock User Ajax
-$(document).ready(function () {
+  // Lock User Ajax
   $('.lock-user').on('click', function (e) {
     $target = $(e.target);
     const id = $target.attr('data-id');
@@ -42,10 +39,8 @@ $(document).ready(function () {
       }
     });
   });
-});
 
-// Unlock User Ajax
-$(document).ready(function () {
+  // Unlock User Ajax
   $('.unlock-user').on('click', function (e) {
     $target = $(e.target);
     const id = $target.attr('data-id');
@@ -60,4 +55,7 @@ $(document).ready(function () {
       }
     });
   });
+
+
+
 });

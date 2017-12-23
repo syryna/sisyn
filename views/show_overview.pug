@@ -1,75 +1,78 @@
 extends layout
 
 block content
-  .row
-    .col-8
-      .card
-        .card-header
-          i.fa.fa-rss
-          | Neuigkeiten
-          .btn-group.float-right
-            button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
-              i.icon-settings
-            .dropdown-menu.dropdown-menu-right
-              a.dropdown-item(href='#') TEXT
-        .card-body
-    .col-4
-      .card
-        .card-header
-          i.fa.fa-rss
-          | Chat
-        .card-body
-          .scrollArea
-          form
-            .form-row
-              input.form-control.col-10(type='text', value=Nachricht, id='chatsend')
-              button.btn.btn-block.btn-success.col-2(type='submit') Senden
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js')
-  script.
-    $(document).ready(function () {
-      var socket = io.connect('http://localhost:3002');
-      socket.on('connect', function(data) {
-        socket.emit('join', '#{user.username} (#{user._id}) joined Chat');
-        $('.scrollArea').empty();
-      });
-      socket.on('broad', function(data) {
-        var x = 0;
-        for (x in data){
-          //Chat Output
-          var output = '';
-          // color own callout
-          if (data[x].userid == '#{user._id}'){
-            output += '<div class="callout callout-primary m-0 p-1">';
-          } else {
-            output += '<div class="callout callout-secondary m-0 p-1">';
-          }
-          // add user picture
-          output += '<div class="d-flex flex-nowrap flex-row"><div class="avatar float-left"><img class="img-avatar" src="' + data[x].picture + '"/></div>';
-          // add user name
-          output += '<div class="d-flex flex-column w-100 px-2"><div class="d-flex flex-row"><div class="d-flex flex-column"><strong>' + data[x].username + '</strong></div>';
-          // add delete button
-          if (data[x].userid == '#{user._id}'){
-            output += '<div class="d-flex flex-column w-100"><a class="ml-auto" href="#"><i class="text-danger fa fa-trash-o"></i></a></div></div>';
-          } else {
-            output += '<div class="d-flex flex-column w-100"></div></div>';
-          }
-          // add chat text
-          output += '<small>' + data[x].message + '</small>';
-          // add timestamp
-          var localTime = new Date(data[x].timestamp);
-          localTime = localTime.toLocaleString();
-          output += '<small class="text-muted mr-3 d-flex justify-content-end"><i class="fa fa-clock-o"></i>&nbsp; ' + localTime + '</small></div></div></div>';
-          // print it to the page
-          $('.scrollArea').append( output );
-        }
-      });
-      $('form').submit(function(e){
-        e.preventDefault();
-        var message = {};
-        message.text = $('#chatsend').val();
-        message.userid = '#{user._id}';
-        message.username = '#{user.username}';
-        socket.emit('messages', message);
-        $('#chatsend').val('');
-      });
-    });
+    .row
+        .col-8
+            .card
+                .card-header
+                    i.fa.fa-rss
+                    | Neuigkeiten
+                    .btn-group.float-right
+                        button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
+                            i.icon-settings
+                        .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='#') TEXT
+                .card-body
+        .col-4
+            .card
+                .card-header
+                    i.fa.fa-rss
+                    | Chat
+                .card-body
+                    .scrollArea
+                    form
+                        .form-row
+                            input.form-control.col-10(type='text', value=Nachricht, id='chatsend')
+                            button.btn.btn-block.btn-success.col-2(type='submit') Senden
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js')
+    script.
+        $(document).ready(function () {
+            var socket = io.connect('http://localhost:3002');
+            socket.on('connect', function(data) {
+                socket.emit('join', '#{user.username} (#{user._id}) joined Chat');
+                $('.scrollArea').empty();
+            });
+            socket.on('broad', function(data) {
+                var x = 0;
+                for (x in data){
+                    //Chat Output
+                    var output = '<hr class="mx-3 my-0">';
+                    // color own callout
+                    if (data[x].userid == '#{user._id}'){
+                        output += '<div class="callout callout-primary m-0 p-1">';
+                    } else {
+                        output += '<div class="callout callout-secondary m-0 p-1">';
+                    }
+                    // add user picture
+                    output += '<div class="d-flex flex-nowrap flex-row"><div class="avatar float-left"><img class="img-avatar" src="' + data[x].picture + '"/></div>';
+                    // add user name
+                    output += '<div class="d-flex flex-column w-100 px-2"><div class="d-flex flex-row"><div class="d-flex flex-column"><strong>' + data[x].username + '</strong></div>';
+                    // add delete button
+                    if (data[x].userid == '#{user._id}'){
+                        output += '<div class="d-flex flex-column w-100"><a class="ml-auto" href="#"><i class="text-danger fa fa-trash-o"></i></a></div></div>';
+                    } else {
+                        output += '<div class="d-flex flex-column w-100"></div></div>';
+                    }
+                    // add chat text
+                    output += '<small>' + data[x].message + '</small>';
+                    // add timestamp
+                    var localTime = new Date(data[x].timestamp);
+                    localTime = localTime.toLocaleString();
+                    output += '<small class="text-muted mr-3 d-flex justify-content-end"><i class="fa fa-clock-o"></i>&nbsp; ' + localTime + '</small></div></div></div>';
+                    // print it to the page
+                    $('.scrollArea').append( output );
+                    $('.scrollArea').stop().animate({
+                        scrollTop: $('.scrollArea')[0].scrollHeight
+                    }, 800);
+                }
+            });
+            $('form').submit(function(e){
+                e.preventDefault();
+                var message = {};
+                message.text = $('#chatsend').val();
+                message.userid = '#{user._id}';
+                message.username = '#{user.username}';
+                socket.emit('messages', message);
+                $('#chatsend').val('');
+            });
+        });

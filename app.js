@@ -171,6 +171,8 @@ app.get("/", ensureAuthenticated, function(req, res) {
 // Route files
 let users = require('./routes/users');
 app.use('/users', users);
+let account = require('./routes/account');
+app.use('/account', account);
 let overview = require('./routes/overview');
 app.use('/overview', overview);
 
