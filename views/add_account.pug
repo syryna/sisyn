@@ -5,7 +5,7 @@ block content
     .col-12
       .card
         .card-header
-          i.fa.fa-rss
+          i.fa.fa-rocket
           | Account hinzufügen
         .card-body
             form(method='POST', action='/account/add/'+_id, id='Form')
@@ -16,25 +16,52 @@ block content
                         span.input-group-addon
                             i.fa.fa-id-card-o
                 p 
-                    small Ab dem dritten Zeichen wird während deiner Eingabe eine Suche bei EVE Online API durchgeführt. Das Ergebnis siehst du im Dropdown. Wähle den Character aus den du speichern möchtest.
+                    small Die nachfolgende Option wirkt sich auf die Suche aus. Strickte Suche (An) nach 'Lemmo' findet keine 'Lemmont'. Strickte Suche (Aus) jedoch schon, kann aber bei kurzen Namen zu sehr vielen Treffern führen, jedoch kann sie hilfreich sein da eine Suche nach 'Lemmont' alle Charaktere findet auch wenn der Begriff nur im Nachnamen erscheint.
+                label.form-check-label.form-check-inline
+                    small Genaue/Strickte Suche:                     
+                .form-check.form-check-inline
+                    label.form-check-label
+                        input.form-check-input(type='radio', name='strict', id='strict', value='true')
+                        small An
+                .form-check.form-check-inline
+                    label.form-check-label
+                        input.form-check-input(type='radio', name='strict', id='strict', value='false' checked)
+                        small Aus
+                p 
+                    small Ab dem dritten Zeichen wird während deiner Eingabe eine Suche bei EVE Online API durchgeführt. Das Ergebnis siehst du im Dropdown. Wähle den Charakter aus den du speichern möchtest. Hast du einen Charakter ausgewählt erscheint sein Bild daneben.
                 .form-row
                     .col
                         .form-group
                             .input-group.mb-3
                                 span.input-group-addon Charakter 1
-                                input.form-control(type='text', id='character1' placeholder='Charname')
+                                input.form-control(type='text', id='character1', placeholder='Charname', data-id='1')
                                 span.input-group-addon
                                     i.icon-user
                             .input-group.mb-3
                                 span.input-group-addon Aufgabe
-                                input.form-control(type='text', id='usage1' placeholder='PVE, Miner, Orca Pilot, etc.')
+                                input.form-control(type='text', id='usage1', placeholder='PVE, Miner, Orca Pilot, etc.')
                                 span.input-group-addon
                                     i.fa.fa-wrench
                             .input-group.mb-3
-                                span.input-group-addon In der Corp
-                                select.form-control(id='corp1')
-                                    option Ja
-                                    option Nein
+                                span.input-group-addon Corporation
+                                input.form-control(type='text', id='corp1', readonly='readonly')
+                                input.form-control(type='text', id='corpname1', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Allianz
+                                input.form-control(type='text', id='alliance1', readonly='readonly')
+                                input.form-control(type='text', id='alliancename1', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Security
+                                input.form-control(type='text', id='sec1', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Geburt
+                                input.form-control(type='text', id='birth1', readonly='readonly')
                                 span.input-group-addon
                                     i.fa.fa-check-circle-o
                     .col
@@ -42,7 +69,7 @@ block content
                             .input-group.mb-3
                                 span.input-group-addon
                                     img(id='char1_pic', src='/img/avatars/1_32.jpg').img-thumbnail
-                                select.form-control(id='char1',size=5)
+                                select.form-control(id='char1',size=4)
                                 span.input-group-addon
                                     i.fa.fa-photo  
                 hr.mx-3.my-0
@@ -52,19 +79,34 @@ block content
                         .form-group
                             .input-group.mb-3
                                 span.input-group-addon Charakter 2
-                                input.form-control(type='text', id='character2' placeholder='Charname')
+                                input.form-control(type='text', id='character2', placeholder='Charname', data-id='2')
                                 span.input-group-addon
                                     i.icon-user
                             .input-group.mb-3
                                 span.input-group-addon Aufgabe
-                                input.form-control(type='text', id='usage2' placeholder='PVE, Miner, Orca Pilot, etc.')
+                                input.form-control(type='text', id='usage2', placeholder='PVE, Miner, Orca Pilot, etc.')
                                 span.input-group-addon
                                     i.fa.fa-wrench
                             .input-group.mb-3
-                                span.input-group-addon In der Corp
-                                select.form-control(id='corp2')
-                                    option Ja
-                                    option Nein
+                                span.input-group-addon Corporation
+                                input.form-control(type='text', id='corp2', readonly='readonly')
+                                input.form-control(type='text', id='corpname2', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Allianz
+                                input.form-control(type='text', id='alliance2', readonly='readonly')
+                                input.form-control(type='text', id='alliancename2', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Security
+                                input.form-control(type='text', id='sec2', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Geburt
+                                input.form-control(type='text', id='birth2', readonly='readonly')
                                 span.input-group-addon
                                     i.fa.fa-check-circle-o
                     .col
@@ -72,7 +114,7 @@ block content
                             .input-group.mb-3
                                 span.input-group-addon
                                     img(id='char2_pic', src='/img/avatars/1_32.jpg').img-thumbnail
-                                select.form-control(id='char2',size=5)
+                                select.form-control(id='char2',size=4)
                                 span.input-group-addon
                                     i.fa.fa-photo
                 hr.mx-3.my-0
@@ -82,19 +124,34 @@ block content
                         .form-group
                             .input-group.mb-3
                                 span.input-group-addon Charakter 3
-                                input.form-control(type='text', id='character3' placeholder='Charname')
+                                input.form-control(type='text', id='character3', placeholder='Charname', data-id='3')
                                 span.input-group-addon
                                     i.icon-user
                             .input-group.mb-3
                                 span.input-group-addon Aufgabe
-                                input.form-control(type='text', id='usage3' placeholder='PVE, Miner, Orca Pilot, etc.')
+                                input.form-control(type='text', id='usage3', placeholder='PVE, Miner, Orca Pilot, etc.')
                                 span.input-group-addon
                                     i.fa.fa-wrench
                             .input-group.mb-3
-                                span.input-group-addon In der Corp
-                                select.form-control(id='corp3')
-                                    option Ja
-                                    option Nein
+                                span.input-group-addon Corporation
+                                input.form-control(type='text', id='corp3', readonly='readonly')
+                                input.form-control(type='text', id='corpname3', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Allianz
+                                input.form-control(type='text', id='alliance3', readonly='readonly')
+                                input.form-control(type='text', id='alliancename3', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Security
+                                input.form-control(type='text', id='sec3', readonly='readonly')
+                                span.input-group-addon
+                                    i.fa.fa-check-circle-o
+                            .input-group.mb-3
+                                span.input-group-addon Geburt
+                                input.form-control(type='text', id='birth3', readonly='readonly')
                                 span.input-group-addon
                                     i.fa.fa-check-circle-o
                     .col
@@ -102,19 +159,30 @@ block content
                             .input-group.mb-3
                                 span.input-group-addon
                                     img(id='char3_pic', src='/img/avatars/1_32.jpg').img-thumbnail
-                                select.form-control(id='char3',size=5)
+                                select.form-control(id='char3',size=4)
                                 span.input-group-addon
                                     i.fa.fa-photo
-                
-
-
-
     script.
         $(document).ready(function() {
+
+            function setHeader(xhr) {
+                xhr.setRequestHeader('Content-Type', 'application/json');
+            }
+
             var timeoutID = null;
             var charIds = {};
 
-            function findCharacter(str) {
+            function findCharacter(str, elem_id) {
+
+                // Get Strict Mode
+                var strict = true;
+                if ($('input[type=radio][name=strict]:checked').attr('value') == 'true') {
+                    strict = true;
+                }
+                else if ($('input[type=radio][name=strict]:checked').attr('value') == 'false') {
+                    strict = false;
+                }
+
                 // GET Char IDs from EVE API
                 if (str.length > 3){
                     $.ajax({
@@ -125,32 +193,33 @@ block content
                             'datasource': 'tranquility',
                             'language': 'en-us',
                             'search': str,
-                            'strict': 'false'
+                            'strict': strict
                             },
                         dataType: 'json',
                         success: function(data) { 
                             charIds = data;
-                            console.log('return: ' + JSON.stringify(charIds));
 
                             // GET Char name of IDs from EVE API
                             if ($.isArray(charIds.character)){
-                                console.log(charIds.character.toString());
                                 $.ajax({
                                     type: 'GET',
                                     url: 'https://esi.tech.ccp.is/latest/characters/names/',
                                     data: {
-                                        'character_ids': charIds.character.toString()
+                                        'character_ids': charIds.character.toString(),
+                                        'datasource': 'tranquility',
+                                        'language': 'en-us'
                                         },
                                     dataType: 'json',
                                     success: function(data) { 
                                         charIds = data;
-                                        console.log('return2: ' + JSON.stringify(charIds));
+                                        
                                         // Fill Multiselect
-                                        $('#char1').empty();
+                                        $('#char' + elem_id).empty();
                                         var x = 0;
                                         for (x in charIds){
-                                            $('#char1').append('<option value="' + charIds[x].character_id + '">' + charIds[x].character_name + '</option>');
+                                            $('#char' + elem_id).append('<option value="' + charIds[x].character_id + '">' + charIds[x].character_name + '</option>');
                                         }
+
                                     },
                                     error: function(req, error, details) { 
                                         console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
@@ -169,32 +238,174 @@ block content
                         },
                         beforeSend: setHeader
                     });
-
-                    function setHeader(xhr) {
-                        xhr.setRequestHeader('Content-Type', 'application/json');
-                    }
                 }
             }
 
             // Listen on Changes
             $('#character1, #character2, #character3').keyup(function(e) {
                 clearTimeout(timeoutID);
-                timeoutID = setTimeout(findCharacter.bind(undefined, e.target.value), 500);
+                var elem_id = this.getAttribute('data-id');
+                timeoutID = setTimeout(findCharacter.bind(undefined, e.target.value, elem_id), 500);
             });
 
             // Get Clicked user
             $('#char1, #char2, #char3').on('change', function () {
                 $('#char1 option:selected').each(function() {
-                    console.log('https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
-                    $("#char1_pic").attr('src' , 'https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                    var sel_char_id = $(this).attr('value');
+                    
+                    // Update Picture
+                    $("#char1_pic").attr('src' , 'https://image.eveonline.com/Character/' + sel_char_id + '_32.jpg');
+                    
+                    // Update Name
+                    $("#character1").val($(this).html());
+
+                    // Get Char Deatils (Corp, Ally, Security, Birth) from CCP
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://esi.tech.ccp.is/latest/characters/' + sel_char_id + '/',
+                        data: {
+                            'character_id': sel_char_id,
+                            'datasource': 'tranquility',
+                            'language': 'en-us'
+                            },
+                        dataType: 'json',
+                        success: function(data) { 
+                            charDetails = data;
+                    
+                            // Update Corp
+                            $("#corp1").val(charDetails.corporation_id);
+                            $.ajax({
+                                type: 'GET',
+                                url: 'https://esi.tech.ccp.is/latest/corporations/' + charDetails.corporation_id + '/',
+                                data: {
+                                    'corporation_id': charDetails.corporation_id,
+                                    'datasource': 'tranquility',
+                                    'language': 'en-us'
+                                    },
+                                dataType: 'json',
+                                success: function(data) { 
+                                    corpDetails = data;
+                                    $("#corpname1").val(corpDetails.name);
+                                },
+                                error: function(req, error, details) { 
+                                    console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                                },
+                                beforeSend: setHeader
+                            });
+
+                            // Update Ally
+                            $("#alliance1").val(charDetails.alliance_id);
+                            $.ajax({
+                                type: 'GET',
+                                url: 'https://esi.tech.ccp.is/latest/alliances/' + charDetails.alliance_id + '/',
+                                data: {
+                                    'alliance_id': charDetails.alliance_id,
+                                    'datasource': 'tranquility',
+                                    'language': 'en-us'
+                                    },
+                                dataType: 'json',
+                                success: function(data) { 
+                                    allyDetails = data;
+                                    $("#alliancename1").val(allyDetails.name);
+                                },
+                                error: function(req, error, details) { 
+                                    console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                                },
+                                beforeSend: setHeader
+                            });
+
+                            // Update Security
+                            $("#sec1").val(charDetails.security_status);
+
+                            // Update Birth
+                            $("#birth1").val(charDetails.birthday);
+                        },
+                        error: function(req, error, details) { 
+                            console.log('error3: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                        },
+                        beforeSend: setHeader
+                    });                    
                 });  
+
                 $('#char2 option:selected').each(function() {
-                    console.log('https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
-                    $("#char2_pic").attr('src' , 'https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                    var sel_char_id = $(this).attr('value');
+                    
+                    // Update Picture
+                    $("#char2_pic").attr('src' , 'https://image.eveonline.com/Character/' + sel_char_id + '_32.jpg');
+                    
+                    // Update Name
+                    $("#character2").val($(this).html());
+
+                    // Get Char Deatils (Corp, Ally, Security, Birth) from CCP
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://esi.tech.ccp.is/latest/characters/' + sel_char_id + '/',
+                        data: {
+                            'character_id': sel_char_id,
+                            'datasource': 'tranquility',
+                            'language': 'en-us'
+                            },
+                        dataType: 'json',
+                        success: function(data) { 
+                            charDetails = data;
+                    
+                            // Update Corp
+                            $("#corp2").val(charDetails.corporation_id);
+
+                            // Update Ally
+                            $("#alliance2").val(charDetails.alliance_id);
+
+                            // Update Security
+                            $("#sec2").val(charDetails.security_status);
+
+                            // Update Birth
+                            $("#birth2").val(charDetails.birthday);
+                        },
+                        error: function(req, error, details) { 
+                            console.log('error3: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                        },
+                        beforeSend: setHeader
+                    });
                 });
                 $('#char3 option:selected').each(function() {
-                    console.log('https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
-                    $("#char3_pic").attr('src' , 'https://image.eveonline.com/Character/' + $(this).attr('value') + '_32.jpg');
+                    var sel_char_id = $(this).attr('value');
+                    
+                    // Update Picture
+                    $("#char3_pic").attr('src' , 'https://image.eveonline.com/Character/' + sel_char_id + '_32.jpg');
+                    
+                    // Update Name
+                    $("#character3").val($(this).html());
+
+                    // Get Char Deatils (Corp, Ally, Security, Birth) from CCP
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://esi.tech.ccp.is/latest/characters/' + sel_char_id + '/',
+                        data: {
+                            'character_id': sel_char_id,
+                            'datasource': 'tranquility',
+                            'language': 'en-us'
+                            },
+                        dataType: 'json',
+                        success: function(data) { 
+                            charDetails = data;
+                    
+                            // Update Corp
+                            $("#corp3").val(charDetails.corporation_id);
+
+                            // Update Ally
+                            $("#alliance3").val(charDetails.alliance_id);
+
+                            // Update Security
+                            $("#sec3").val(charDetails.security_status);
+
+                            // Update Birth
+                            $("#birth3").val(charDetails.birthday);
+                        },
+                        error: function(req, error, details) { 
+                            console.log('error3: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                        },
+                        beforeSend: setHeader
+                    });
                 });
             });
         });

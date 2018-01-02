@@ -21,22 +21,26 @@ router.get('/auth', function(req, res){
 
 // EVE Online SSO Callback
 router.get('/callback', ensureAuthenticated, function(req, res) {
+    
     // Returns a promise - resolves into a JSON object containing access and character token.
     var token = {};
     var char = {};
+   
     esso.getTokens({
         client_id: '862888270db84fd5a30b0ba10b19e6a8',
         client_secret: 'D6fFDhV7G98fGG0ANYCXKAul7gPTKhc0NDuy3avm'
         }, req, res,
         function(accessToken, charToken){
-            // tokens
-            console.log(JSON.stringify(accessToken));
+            
+            // Get Tokens and pass them to next Site
             token = accessToken;
-            console.log(JSON.stringify(charToken));
             char = charToken;
+
             httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+            
             var current = new Date();
             var tokenExpiration = new Date(current.getTime() + token.expires_in * 1000).toUTCString();
+            
             res.render('callback', {
                 accessToken : token.access_token,
                 accessTokenExp : tokenExpiration,
@@ -45,7 +49,7 @@ router.get('/callback', ensureAuthenticated, function(req, res) {
                 characterName : char.CharacterName,
                 scopes : char.Scopes
             });
-            console.log('token: ' + token.access_token);
+
         }
     );
 

@@ -156,8 +156,8 @@ html(lang='en')
             // Main content
             main.main
                 // Breadcrumb
-                ol.breadcrumb
-                    | BREAD
+                //ol.breadcrumb
+                //    | BREAD
                 .container-fluid(class='message')
                     != messages('message', locals)
                     if errors
@@ -169,8 +169,8 @@ html(lang='en')
                         block content
             aside.aside-menu
                 | ...
-        footer.app-footer
-            | FOOTER
+        //footer.app-footer
+        //    | FOOTER
 
         // Main scripts
         script(src='/js/app.js')
