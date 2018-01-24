@@ -27,7 +27,7 @@ block content
     script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js')
     script.
         $(document).ready(function () {
-            var socket = io.connect('http://localhost:3002');
+            var socket = io.connect(window.location.host + ':3002');
             socket.on('connect', function(data) {
                 socket.emit('join', '#{user.username} (#{user._id}) joined Chat');
                 $('.scrollArea').empty();
