@@ -24,7 +24,7 @@ mongodb.once('open', function(err) {
     if (err) {
         applog.error('Connect to Mongo DB failed: ' + err);
     } else {
-        applog.info('Connected to Mongo DB: ' + mongourl);
+        applog.info('Connected to Mongo DB: localhost:27017/nodecorp');
     }
 });
 

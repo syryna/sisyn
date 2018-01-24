@@ -25,7 +25,7 @@ router.get('/register', recaptcha.middleware.render, function(req, res) {
 router.post('/register', recaptcha.middleware.verify, function(req, res) {
 
     // get submitted values 
-    const username = req.body.username;
+    let username = req.body.username;
     const firstname = req.body.firstname;
     const email = req.body.email;
     const password = req.body.password;
@@ -44,6 +44,7 @@ router.post('/register', recaptcha.middleware.verify, function(req, res) {
     errors = errors.concat(req.validationErrors());
 
     let queryforUsername = {};
+    username = username.toLowerCase();
     queryforUsername["username"] = username;
 
     User.find(queryforUsername, function(error, item) {
