@@ -187,11 +187,11 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // Start express server
-app.listen(3001, function(err) {
+app.listen(80, function(err) {
     if (err) {
         applog.error('Server start failed: ' + err);
     } else {
-        applog.info('Server up: http://localhost:3001');
+        applog.info('Server up: http://localhost:80');
     }
 });
 server.listen(3002, function(err) {
