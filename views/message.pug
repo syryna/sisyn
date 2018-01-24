@@ -1,4 +1,16 @@
 .messages
-  each type in Object.keys(messages)
-    each message in messages[type]
-      div(class="alert alert-"+type) #{message}
+    each type in Object.keys(messages)
+        each message in messages[type]
+            div(class='alert alert-dismissible fade show alert-' + type, role='alert')
+                button(type='button', class='close', data-dismiss='alert', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                if type == 'success'
+                    h4 Erfolgreich
+                if type == 'warning'
+                    h4 Warnung
+                if type == 'danger'
+                    h4 Kritisch
+                if type == 'info'
+                    h4 Information
+                p(id='message') #{message} &nbsp;
+                    //a.btn.btn-sm.btn-danger.mr-3(href='#' id='alert-proceed') Fortfahren

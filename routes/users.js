@@ -134,13 +134,13 @@ router.post('/login', function(req, res, next) {
 router.get('/edit/:id', ensureAuthenticated, function(req, res) {
     User.findById(req.params.id, function(err, user) {
         if (err) {
-            dblog.error('Error finding user during EDIT_USER: ' + err);
+            dblog.error('Error finding user during user_edit: ' + err);
             return;
         } else {
             // User Check
             if (user._id == req.user.id || req.user.type == 'Admin') {
                 httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-                res.render('edit_user', {
+                res.render('user_edit', {
                     _id: user._id,
                     username: user.username,
                     firstname: user.firstname,
@@ -189,7 +189,7 @@ router.post('/edit/:id', ensureAuthenticated, function(req, res) {
 
     // Validation Errors
     if (errors[0]) {
-        res.render('edit_user', {
+        res.render('user_edit', {
             form_errors: errors,
             _id: user._id,
             username: user.username,
@@ -218,7 +218,7 @@ router.post('/edit/:id', ensureAuthenticated, function(req, res) {
                 // Update User
                 User.update(query, user, function(err) {
                     if (err) {
-                        dblog.error('Error saving user during EDIT_USER: ' + user.username + ': ' + err);
+                        dblog.error('Error saving user during user_edit: ' + user.username + ': ' + err);
                         return;
                     } else {
                         req.flash('success', user.username + ', dein Profil wurde geändert');

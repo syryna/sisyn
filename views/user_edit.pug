@@ -64,28 +64,37 @@ block content
 
     // initialize input fields to reset is-invalid class and refill submitted values
     script(type='text/javascript').
-        // Form Error Validation
-        function validateRegisterForm(errors){
-        for (error of errors){
-            $('input[name=' + error.param + ']').addClass('is-invalid');
-            $('input[name=' + error.param + ']').closest('.input-group').after('<div class="invalid-feedback d-flex">' + error.msg + '</div><br>');
-            $('input[name=' + error.param + ']').val(error.value);
-            // Password is always red as it must be retyped always because of hash calculation
-            $('input[name=password]').addClass('is-invalid');
-            $('input[name=password]').val('');
-            $('input[name=password2]').addClass('is-invalid');
-            $('input[name=password2]').val('');
-        }
-        }
-        var val_errors = !{form_errors ? JSON.stringify(form_errors) : "undefined"};
-        val_errors && validateRegisterForm(val_errors);
-        var val_username = !{username ? JSON.stringify(username) : "undefined"};
-        val_username && $('input[name=username]').val(val_username);
-        var val_firstname = !{firstname ? JSON.stringify(firstname) : "undefined"};
-        val_firstname && $('input[name=firstname]').val(val_firstname);
-        var val_email = !{email ? JSON.stringify(email) : "undefined"};
-        val_email && $('input[name=email]').val(val_email);
-        var val_age = !{age ? JSON.stringify(age) : "undefined"};
-        val_age && $('input[name=age]').val(val_age);
-        var val_picture = !{picture ? JSON.stringify(picture) : "undefined"};
-        val_picture && $('input[name=picture]').val(val_picture);
+        $(document).ready(function () {
+            // Add validation class formatting to the form fields
+            function validateRegisterForm(errors){
+                for (error of errors){
+                    $('input[name=' + error.param + ']').addClass('is-invalid');
+                    $('input[name=' + error.param + ']').closest('.input-group').after('<div class="invalid-feedback d-flex">' + error.msg + '</div><br>');
+                    $('input[name=' + error.param + ']').val(error.value);
+                    // Password is always red as it must be retyped always because of hash calculation
+                    $('input[name=password]').addClass('is-invalid');
+                    $('input[name=password]').val('');
+                    $('input[name=password2]').addClass('is-invalid');
+                    $('input[name=password2]').val('');
+                }
+            }
+            
+            // Do the validation
+            function userEditValidate(){
+                var val_errors = !{form_errors ? JSON.stringify(form_errors) : "undefined"};
+                val_errors && validateRegisterForm(val_errors);
+                var val_username = !{username ? JSON.stringify(username) : "undefined"};
+                val_username && $('input[name=username]').val(val_username);
+                var val_firstname = !{firstname ? JSON.stringify(firstname) : "undefined"};
+                val_firstname && $('input[name=firstname]').val(val_firstname);
+                var val_email = !{email ? JSON.stringify(email) : "undefined"};
+                val_email && $('input[name=email]').val(val_email);
+                var val_age = !{age ? JSON.stringify(age) : "undefined"};
+                val_age && $('input[name=age]').val(val_age);
+                var val_picture = !{picture ? JSON.stringify(picture) : "undefined"};
+                val_picture && $('input[name=picture]').val(val_picture);    
+            }
+            
+            // Form Error Validation      
+            userEditValidate();
+        });
