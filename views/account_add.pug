@@ -351,9 +351,45 @@ block content
                     
                             // Update Corp
                             $("#corp2").val(charDetails.corporation_id);
+                            $.ajax({
+                                type: 'GET',
+                                url: 'https://esi.tech.ccp.is/latest/corporations/' + charDetails.corporation_id + '/',
+                                data: {
+                                    'corporation_id': charDetails.corporation_id,
+                                    'datasource': 'tranquility',
+                                    'language': 'en-us'
+                                    },
+                                dataType: 'json',
+                                success: function(data) { 
+                                    corpDetails = data;
+                                    $("#corpname2").val(corpDetails.name);
+                                },
+                                error: function(req, error, details) { 
+                                    console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                                },
+                                beforeSend: setHeader
+                            });
 
                             // Update Ally
                             $("#alliance2").val(charDetails.alliance_id);
+                            $.ajax({
+                                type: 'GET',
+                                url: 'https://esi.tech.ccp.is/latest/alliances/' + charDetails.alliance_id + '/',
+                                data: {
+                                    'alliance_id': charDetails.alliance_id,
+                                    'datasource': 'tranquility',
+                                    'language': 'en-us'
+                                    },
+                                dataType: 'json',
+                                success: function(data) { 
+                                    allyDetails = data;
+                                    $("#alliancename2").val(allyDetails.name);
+                                },
+                                error: function(req, error, details) { 
+                                    console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                                },
+                                beforeSend: setHeader
+                            });
 
                             // Update Security
                             $("#sec2").val(charDetails.security_status);
@@ -389,11 +425,47 @@ block content
                         success: function(data) { 
                             charDetails = data;
                     
-                            // Update Corp
+                            /// Update Corp
                             $("#corp3").val(charDetails.corporation_id);
+                            $.ajax({
+                                type: 'GET',
+                                url: 'https://esi.tech.ccp.is/latest/corporations/' + charDetails.corporation_id + '/',
+                                data: {
+                                    'corporation_id': charDetails.corporation_id,
+                                    'datasource': 'tranquility',
+                                    'language': 'en-us'
+                                    },
+                                dataType: 'json',
+                                success: function(data) { 
+                                    corpDetails = data;
+                                    $("#corpname3").val(corpDetails.name);
+                                },
+                                error: function(req, error, details) { 
+                                    console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                                },
+                                beforeSend: setHeader
+                            });
 
                             // Update Ally
                             $("#alliance3").val(charDetails.alliance_id);
+                            $.ajax({
+                                type: 'GET',
+                                url: 'https://esi.tech.ccp.is/latest/alliances/' + charDetails.alliance_id + '/',
+                                data: {
+                                    'alliance_id': charDetails.alliance_id,
+                                    'datasource': 'tranquility',
+                                    'language': 'en-us'
+                                    },
+                                dataType: 'json',
+                                success: function(data) { 
+                                    allyDetails = data;
+                                    $("#alliancename3").val(allyDetails.name);
+                                },
+                                error: function(req, error, details) { 
+                                    console.log('error2: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
+                                },
+                                beforeSend: setHeader
+                            });
 
                             // Update Security
                             $("#sec3").val(charDetails.security_status);

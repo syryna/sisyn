@@ -10,6 +10,7 @@ const recaptcha = new Recaptcha('6LdSUzoUAAAAALreqWmgqJX0IIWYwQ5m0X6DZ8S5', '6Ld
 
 // Bring in User Models
 const User = require('../models/user');
+const DelUser = require('../models/deluser');
 
 // Register Form
 router.get('/register', recaptcha.middleware.render, function(req, res) {
@@ -243,13 +244,23 @@ router.delete('/:id', function(req, res) {
     User.findById(req.params.id, function(err, user) {
         // User Check
         if (user._id == req.user.id || req.user.type == 'Admin') {
+            // copy user to collection DelUsers
+            const newDelUser = new DelUser(user.toObject());
+            newDelUser.save(function(err) {
+                if (err) {
+                    dblog.error('Error copying deleting user during SAVE: ' + params.id + ': ' + err);
+                    return;
+                }
+            });
+            // Delete user from collection Users
             User.remove(query, function(err) {
                 if (err) {
                     dblog.error('Error deleting user during DELETE: ' + params.id + ': ' + err);
                     return;
                 }
                 httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
-                req.flash('success', 'Benutzer "' + user.username + '" wurde gelöscht');
+                req.flash('success', 'Benutzer "' + user.username + '" wurde nach "delusers" kopiert');
+                req.flash('warning', 'Benutzer "' + user.username + '" aus "users" wurde gelöscht');
                 res.send('Success');
             });
         } else {
@@ -325,7 +336,7 @@ router.get('/userlist', ensureAuthenticated, function(req, res) {
             dblog.error('Error finding user during USERLIST: ' + err);
         } else {
             httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-            res.render('userlist', {
+            res.render('user_listall', {
                 users: users,
                 current_user_id: req.user.id,
                 current_user_type: req.user.type

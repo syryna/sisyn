@@ -5,7 +5,7 @@ const router = express.Router();
 // Show Overview
 router.get('/show', ensureAuthenticated, function(req, res) {
     httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-    res.render('show_overview');
+    res.render('overview_show');
 });
 
 // Access Control

@@ -6,7 +6,7 @@ const esso = require('eve-sso-simple');
 // Add Account
 router.get('/add/:id', ensureAuthenticated, function(req, res) {
     httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-    res.render('add_account');
+    res.render('account_add');
 });
 
 // EVE Online Auth
@@ -14,8 +14,8 @@ router.get('/auth', function(req, res){
     esso.login({
         client_id: '862888270db84fd5a30b0ba10b19e6a8',
         client_secret: 'D6fFDhV7G98fGG0ANYCXKAul7gPTKhc0NDuy3avm',
-        redirect_uri: 'http://localhost:3001/account/callback',
-        scope: 'esi-assets.read_assets.v1'
+        redirect_uri: 'http://localhost/account/callback',
+        scope: 'publicData esi-corporations.read_structures.v1 esi-assets.read_corporation_assets.v1 esi-bookmarks.read_corporation_bookmarks.v1 esi-corporations.read_starbases.v1 esi-industry.read_corporation_jobs.v1 esi-industry.read_corporation_mining.v1 esi-corporations.read_outposts.v1'
     }, res);
   });
 

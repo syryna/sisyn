@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // User Schema
-const userSchema = mongoose.Schema({
+const deluserSchema = mongoose.Schema({
     username: {
         type: String,
         required: true
@@ -41,4 +41,4 @@ const userSchema = mongoose.Schema({
     }
 });
 
-let User = module.exports = mongoose.model('user', userSchema);
+let DelUser = module.exports = mongoose.model('deluser', deluserSchema);
