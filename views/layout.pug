@@ -120,13 +120,8 @@ html(lang='en')
                             li.nav-item
                                 a.nav-link(href='#')
                                     i.fa.fa-sign-in
-                                    |  Aufträge
-                                    //span.badge.badge-pill.badge-primary NEU
-                            li.nav-item
-                                a.nav-link(href='#')
-                                    i.fa.fa-sign-out
-                                    |  Bestellungen
-                                    //span.badge.badge-pill.badge-primary NEU
+                                    |  Bedarf
+                                    span.badge.badge-pill.badge-warning WORK
                             li.nav-item
                                 a.nav-link(href='#')
                                     i.fa.fa-industry
@@ -140,8 +135,14 @@ html(lang='en')
                             li.nav-item
                                 a.nav-link(href='#')
                                     i.icon-equalizer
-                                    |  POS Status
+                                    |  Fuel Status
                                     //span.badge.badge-pill.badge-primary NEU
+                        li.nav-title Persönlich
+                            li.nav-item
+                                a.nav-link(href='#')
+                                    i.fa.fa-area-chart
+                                    |  PI Status
+                                    span.badge.badge-pill.badge-warning WORK
                         li.nav-title Information
                             li.nav-item
                                 a.nav-link(href='#')
@@ -156,8 +157,13 @@ html(lang='en')
                         li.nav-title Administration
                             li.nav-item
                                 a.nav-link(href='/admin/image_upload')
-                                    i.icon-people
+                                    i.fa.fa-photo
                                     |  Bilder Upload
+                                    span.badge.badge-pill.badge-primary NEU
+                            li.nav-item
+                                a.nav-link(href='/admin/tokenlist')
+                                    i.fa.fa-id-card-o
+                                    |  Token Status
                                     span.badge.badge-pill.badge-primary NEU
 
             // Main content

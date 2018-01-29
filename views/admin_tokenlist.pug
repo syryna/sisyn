@@ -1,0 +1,39 @@
+extends layout
+
+block content
+    .row
+        .col-12
+            .card
+                .card-header
+                    i.fa.fa-list
+                    | Spieler Token Liste
+                .card-body
+                    table.table.table-sm
+                        thead
+                        tr
+                            th Charactername
+                            th Character-ID
+                            th Refresh Token
+                            th Access Token
+                            th Access Token Gültigkeit
+                            th Scopes
+                        tbody
+                        each token in tokens
+                            tr
+                                td= token.charname
+                                td= token.charid
+                                td(data-toggle='tooltip', data-placement='bottom', title=token.refreshtoken) HOVER
+                                td(data-toggle='tooltip', data-placement='bottom', title=token.accesstoken) HOVER
+                                td
+                                    script.
+                                        var tokenexp = new Date("#{token.accesstokenexp}");
+                                        document.write(DEDate(tokenexp));  
+                                td= token.scopes
+                        else 
+                            tr
+                                td -
+                                td -
+                                td -
+                                td -
+                                td -
+                                td -

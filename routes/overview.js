@@ -174,12 +174,13 @@ router.delete('/news/:id', function(req, res) {
                 fs.unlink(img_path, function(err){
                     if (err){
                         req.flash('danger', 'Fehler beim Löschen des Bildes: ' + err);
+                        res.redirect('/overview/show');
+                    } else {
+                        httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
+                        req.flash('warning', 'Nachricht "' + req.params.id + '" aus "news" wurde gelöscht');
+                        res.send('Success');
                     }
                 });
-
-                httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
-                req.flash('warning', 'Nachricht "' + req.params.id + '" aus "news" wurde gelöscht');
-                res.send('Success');
             });
         } else {
             res.status(500).send();

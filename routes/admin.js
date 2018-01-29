@@ -5,6 +5,9 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path'); 
 
+// Bring in User Models
+const Token = require('../models/token');
+
 // Initialize Multer Middleware
 var storage =   multer.diskStorage({
     destination: function (req, file, callback) {
@@ -80,6 +83,44 @@ router.post('/image_upload', ensureAuthenticated, function(req, res) {
         httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body) + ' File: ' +JSON.stringify(req.file));
         req.flash('success', 'Hochladen des Bildes erfolgreich "' + req.user.username + '_' + req.file.originalname + '"');
         res.redirect('/admin/image_upload');
+    });
+});
+
+// Image Deletion
+router.delete('/image_upload/:file', function(req, res) {
+    if (!req.user.id) {
+        res.status(500).send();
+    }
+
+    let file = req.params.file;
+    // delete file
+    var img_path = path.join(__dirname, '../public/uploads/' + file.toString());
+    fs.unlink(img_path, function(err){
+        if (err){
+            req.flash('danger', 'Fehler beim Löschen des Bildes: ' + err);
+            res.redirect('/admin/image_upload');
+        } else {
+            httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
+            req.flash('warning', 'Bild "' + req.params.file + '" wurde gelöscht');
+            res.send('Success');
+        }
+    });
+});
+
+// Show Tokenlist
+router.get('/tokenlist', ensureAuthenticated, function(req, res) {
+    
+    //Load News
+    Token.find({}, function(err, tokens) {
+        if (err) {
+            dblog.error('Error finding Tokens during List ADMIN: ' + err);
+        } else {
+            httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+            res.render('admin_tokenlist', {
+                tokens: tokens,
+                user: req.user
+            });
+        }
     });
 });
 

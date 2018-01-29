@@ -33,6 +33,7 @@ block content
                             th Dateiname
                             th Größe (Bytes)
                             th Link
+                            th 
                         tbody
                         each file in files
                             tr
@@ -40,8 +41,12 @@ block content
                                 td= file.file_size
                                 td
                                     a(href=file.file_link, target='_blank') LINK
+                                td
+                                    a(href='#')
+                                        i.mr-3.fa.fa-close.text-danger.delete-pic(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=file.file_name)
                         else 
                             tr
-                                td no files found
+                                td keine Dateien gefunden
+                                td -
                                 td -
                                 td -

@@ -178,4 +178,29 @@ $(document).ready(function () {
             });
         });
     });
+
+    // ------------------------
+    // overview_show page functions
+    // ------------------------
+
+    // Delete Pic Ajax
+    $('.delete-pic').on('click', function (e) {
+        e.preventDefault();
+        $target = $(e.target);
+        const file = $target.attr('data-id');
+        $('#dangerModal').modal('show');
+        $('.danger-confirm').on('click', function () {
+            $.ajax({
+                type: 'DELETE',
+                url: '/admin/image_upload/' + file,
+                success: function (response) {
+                    window.location.href = '/admin/image_upload';
+                },
+                error: function (err) {
+                    console.log(JSON.stringify(err));
+                }
+            });
+        });
+    });
+
 });
