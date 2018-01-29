@@ -13,8 +13,17 @@ var storage =   multer.diskStorage({
     filename: function (req, file, callback) {
         callback(null, Date.now() + '-' + file.originalname);
     }
-  });
-var upload = multer({ storage : storage}).single('fileinput');
+});
+
+var filter = function (req, file, callback) {
+    // accept image only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        return callback(new Error('Nur Bilder (jpg, jpeg, png und gif) sind erlaubt!'), false);
+    }
+    callback(null, true);
+}  
+
+var upload = multer({ storage : storage, fileFilter : filter}).single('fileinput');
 
 // Bring in User Models
 const Chat = require('../models/chat');
@@ -83,12 +92,11 @@ router.get('/newsadd', ensureAuthenticated, function(req, res) {
 });
 
 // Add News
-
 router.post('/newsadd', ensureAuthenticated, function(req, res) {
     //Multer File Upload logic
     upload(req,res,function(err) {
         if(err) {
-            req.flash('danger', 'Fehler beim Hochladen des Bildes');
+            req.flash('danger', 'Fehler beim Hochladen des Bildes: ' + err);
             return;
         } 
 
@@ -165,7 +173,7 @@ router.delete('/news/:id', function(req, res) {
                 var img_path = path.join(__dirname, '../public' + news.bgurl.toString());
                 fs.unlink(img_path, function(err){
                     if (err){
-                        console.log(err);
+                        req.flash('danger', 'Fehler beim Löschen des Bildes: ' + err);
                     }
                 });
 

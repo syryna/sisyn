@@ -174,6 +174,8 @@ let accounts = require('./routes/accounts');
 app.use('/accounts', accounts);
 let overview = require('./routes/overview');
 app.use('/overview', overview);
+let admin = require('./routes/admin');
+app.use('/admin', admin);
 
 // Access Control
 function ensureAuthenticated(req, res, next) {

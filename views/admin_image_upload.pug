@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    .row
+        .col-7
+            .card
+                .card-header
+                    i.fa.fa-photo
+                    | Bilder Upload
+                .card-body
+                    form(method='POST', action='/admin/image_upload/', id='Form', enctype="multipart/form-data")
+                        .form-group
+                            .input-group.mb-3
+                                p Wähle ein Bild von deiner Festplatte aus. Es wird beim Senden mit hochgeladen.
+                        .form-group
+                            .input-group.mb-3
+                                input.form-control.custom-file-input(type='file', placeholder='Bild auswählen und hochladen', name='fileinput', id='fileinput', accept="image/*")
+                                span.custom-file-control
+                        .form-group
+                            .gallery.d-flex.flex-row.justify-content-center(id='gallery')
+                                .thumbnail
+                                .filemetadata.ml-3
+                        button.btn.btn-block.btn-success(type='submit') Bild Hochladen
+        .col-5
+            .card
+                .card-header
+                    i.fa.fa-list
+                    | Bilder Liste in /uploads
+                .card-body
+                    table.table.table-sm
+                        thead
+                        tr
+                            th Dateiname
+                            th Größe (Bytes)
+                            th Link
+                        tbody
+                        each file in files
+                            tr
+                                td= file.file_name
+                                td= file.file_size
+                                td
+                                    a(href=file.file_link, target='_blank') LINK
+                        else 
+                            tr
+                                td no files found
+                                td -
+                                td -
