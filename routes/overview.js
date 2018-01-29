@@ -2,6 +2,8 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path'); 
 
 // Initialize Multer Middleware
 var storage =   multer.diskStorage({
@@ -159,6 +161,14 @@ router.delete('/news/:id', function(req, res) {
                     dblog.error('Error deleting news during DELETE: ' + req.params.id + ': ' + err);
                     return;
                 }
+                // delete file
+                var img_path = path.join(__dirname, '../public' + news.bgurl.toString());
+                fs.unlink(img_path, function(err){
+                    if (err){
+                        console.log(err);
+                    }
+                });
+
                 httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
                 req.flash('warning', 'Nachricht "' + req.params.id + '" aus "news" wurde gelöscht');
                 res.send('Success');
