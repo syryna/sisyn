@@ -162,10 +162,10 @@ app.get('*', function(req, res, next) {
 });
 
 // Routes for the App
-// app.get("/", ensureAuthenticated, function(req, res) {
-//     // Placeholder
-//     httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-// });
+app.get("/", ensureAuthenticated, function(req, res) {
+    // Placeholder
+    httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+});
 
 // Route files
 let users = require('./routes/users');
