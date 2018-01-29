@@ -11,6 +11,7 @@ const recaptcha = new Recaptcha('6LdSUzoUAAAAALreqWmgqJX0IIWYwQ5m0X6DZ8S5', '6Ld
 // Bring in User Models
 const User = require('../models/user');
 const DelUser = require('../models/deluser');
+const Account = require('../models/account');
 
 // Register Form
 router.get('/register', recaptcha.middleware.render, function(req, res) {
@@ -141,19 +142,44 @@ router.get('/edit/:id', ensureAuthenticated, function(req, res) {
         } else {
             // User Check
             if (user._id == req.user.id || req.user.type == 'Admin') {
-                httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-                res.render('user_edit', {
-                    _id: user._id,
-                    username: user.username,
-                    firstname: user.firstname,
-                    age: user.age,
-                    email: user.email,
-                    picture: user.picture,
-                    user: user
+
+                //Load all character pictures from accounts
+                let query = { userid: user._id }
+                let acc_pic_urls = [];
+
+                Account.find(query, function(err, accounts) {
+                    if (err) {
+                        dblog.error('Error finding accounts during USER EDIT: ' + err);
+                    } else {
+                        //if char picture url not empty
+                        for (x in accounts){
+                            if (accounts[x].char1_pic) {
+                                acc_pic_urls.push(accounts[x].char1_pic);
+                            }
+                            if (accounts[x].char2_pic) {
+                                acc_pic_urls.push(accounts[x].char2_pic);
+                            }
+                            if (accounts[x].char3_pic) {
+                                acc_pic_urls.push(accounts[x].char3_pic);
+                            }
+                        }
+                        
+                        httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+                        res.render('user_edit', {
+                            _id: user._id,
+                            username: user.username,
+                            firstname: user.firstname,
+                            age: user.age,
+                            email: user.email,
+                            picture: user.picture,
+                            user: user,
+                            acc_pic_urls: acc_pic_urls
+                        });
+                    }
                 });
             } else {
                 req.flash('danger', 'Nicht berechtigt !!');
-                res.redirect('/');
+                res.redirect('/users/listall');
             }
         }
     });
@@ -225,7 +251,7 @@ router.post('/edit/:id', ensureAuthenticated, function(req, res) {
                     } else {
                         req.flash('success', user.username + ', dein Profil wurde geändert');
                         httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-                        res.redirect('/');
+                        res.redirect('/users/listall');
                     }
                 });
             });
@@ -249,14 +275,14 @@ router.delete('/:id', function(req, res) {
             const newDelUser = new DelUser(user.toObject());
             newDelUser.save(function(err) {
                 if (err) {
-                    dblog.error('Error copying deleting user during SAVE: ' + params.id + ': ' + err);
+                    dblog.error('Error copying deleting user during SAVE: ' + req.params.id + ': ' + err);
                     return;
                 }
             });
             // Delete user from collection Users
             User.remove(query, function(err) {
                 if (err) {
-                    dblog.error('Error deleting user during DELETE: ' + params.id + ': ' + err);
+                    dblog.error('Error deleting user during DELETE: ' + req.params.id + ': ' + err);
                     return;
                 }
                 httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
@@ -283,7 +309,7 @@ router.post('/lock/:id', function(req, res) {
             user.locked = true;
             User.update(query, user, function(err) {
                 if (err) {
-                    dblog.error('Error updating user during LOCK: ' + params.id + ': ' + err);
+                    dblog.error('Error updating user during LOCK: ' + req.params.id + ': ' + err);
                     return;
                 }
                 httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
@@ -309,7 +335,7 @@ router.post('/unlock/:id', function(req, res) {
             user.locked = false;
             User.update(query, user, function(err) {
                 if (err) {
-                    dblog.error('Error updating user during UNLOCK: ' + params.id + ': ' + err);
+                    dblog.error('Error updating user during UNLOCK: ' + req.params.id + ': ' + err);
                     return;
                 }
                 httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl + ' Body: ' + JSON.stringify(req.body));
@@ -331,16 +357,25 @@ router.get('/logout', ensureAuthenticated, function(req, res) {
 });
 
 // List all members
-router.get('/userlist', ensureAuthenticated, function(req, res) {
+router.get('/listall', ensureAuthenticated, function(req, res) {
     User.find({}, function(err, users) {
         if (err) {
-            dblog.error('Error finding user during USERLIST: ' + err);
+            dblog.error('Error finding users during USERLIST: ' + err);
         } else {
-            httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
-            res.render('user_listall', {
-                users: users,
-                current_user_id: req.user.id,
-                current_user_type: req.user.type
+            //Pre-Load all accounts
+            Account.find({}, function(err, accounts) {
+                if (err) {
+                    dblog.error('Error finding accounts during USERLIST: ' + err);
+                } else {
+                    httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+                    res.render('user_listall', {
+                        users: users,
+                        accounts: accounts,
+                        current_user_id: req.user.id,
+                        current_user_type: req.user.type,
+                        user: req.user
+                    });
+                }
             });
         }
     });

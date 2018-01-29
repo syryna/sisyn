@@ -1,4 +1,21 @@
+/* Chat area definition */
 .scrollArea {
-    height:550px;
+    height:465px;
     overflow-y: scroll;
     }
+
+/* Browse Button definition */
+.custom-file-control:lang(en):empty::after {
+    content: "Wähle Hintergrundbild aus..."; }
+.custom-file-control:lang(en)::before {
+    content: "Suche"; }
+
+/* Preview Area for Image Upload */
+#gallery .thumbnail{
+    height: 150px;
+    float:left;
+    margin:2px;
+}
+#gallery .thumbnail img{
+    height: 150px;
+}  

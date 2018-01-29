@@ -20,52 +20,167 @@ block content
                 th Typ
                 th Aktion
             tbody
-              each user, i in users
+              each user_db, i in users
                 tr
-                  if (user.picture != 'false')
+                  if (user_db.picture != 'false')
                     td
-                      img.img-avatar(src=user.picture)
+                      img.img-avatar(src=user_db.picture)
                   else
                     td
                       img.img-avatar(src='/img/avatars/1_32.jpg')
-                  td(data-toggle='tooltip', data-placement='bottom', title=user._id)= user.username
-                  td= user.firstname
-                  td= user.age
-                  td= user.email
-                  if (user.locked == true)
+                  td(data-toggle='tooltip', data-placement='bottom', title=user_db._id)= user_db.username
+                  td= user_db.firstname
+                  td= user_db.age
+                  td 
+                    .span.badge.badge-primary verborgen
+                  if (user_db.locked == true)
                     td
                       .span.badge.badge-danger gesperrt
-                  else if (user.locked == false)
+                  else if (user_db.locked == false)
                     td
                       .span.badge.badge-success freigeschaltet
                   else 
                     td
                       .span.badge.badge-secondary unbekannt
-                  td= user.type
+                  if (user_db.type == 'Admin')
+                    td
+                      .span.badge.badge-danger Admin
+                  else if (user_db.type == 'Standard')
+                    td
+                      .span.badge.badge-success Standard
+                  else 
+                    td
+                      .span.badge.badge-secondary unbekannt
                   td
                     if (current_user_type == 'Admin')
-                      a(href='/users/edit/'+user._id)
+                      a(href='/users/edit/'+user_db._id)
                         i.mr-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
                       a(href='#')
-                        i.mr-3.fa.fa-close.text-danger.delete-user(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user._id)
+                        i.mr-3.fa.fa-close.text-danger.delete-user(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user_db._id)
                       a(href='#')
-                        i.mr-3.fa.fa-lock.text-danger.lock-user(data-toggle='tooltip', data-placement='bottom', title='Sperren', data-id=user._id)
+                        i.mr-3.fa.fa-lock.text-danger.lock-user(data-toggle='tooltip', data-placement='bottom', title='Sperren', data-id=user_db._id)
                       a(href='#')
-                        i.mr-3.fa.fa-unlock.text-success.unlock-user(data-toggle='tooltip', data-placement='bottom', title='Freigeben', data-id=user._id)
-                      a(href='#')
+                        i.mr-3.fa.fa-unlock.text-success.unlock-user(data-toggle='tooltip', data-placement='bottom', title='Freigeben', data-id=user_db._id)
+                      a(href='/accounts/add/'+user_db._id)
                         i.mr-3.fa.fa-plus-square-o.text-dark(data-toggle='tooltip', data-placement='bottom', title='Account hinzufügen')
-                    else if (user._id == current_user_id)
-                      a(href='/users/edit/'+user._id)
+                    else if (user_db._id == current_user_id)
+                      a(href='/users/edit/'+user_db._id)
                         i.mr-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
                       a(href='#')
-                        i.mr-3.fa.fa-close.text-danger.delete-user(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user._id)
+                        i.mr-3.fa.fa-close.text-danger.delete-user(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user_db._id)
                       i.mr-3.fa.fa-lock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Sperren')
                       i.mr-3.fa.fa-unlock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Freigeben')
-                      a(href='#')
+                      a(href='/accounts/add/'+user_db._id)
                         i.mr-3.fa.fa-plus-square-o.text-dark(data-toggle='tooltip', data-placement='bottom', title='Account hinzufügen')
                     else
                       i.mr-3.fa.fa-pencil.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Ändern')
-                      i.mr-3.fa.fa-close.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user._id)
+                      i.mr-3.fa.fa-close.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=user_db._id)
                       i.mr-3.fa.fa-lock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Sperren')
                       i.mr-3.fa.fa-unlock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Freigeben')
                       i.mr-3.fa.fa-plus-square-o.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Account hinzufügen')
+                each account, j in accounts
+                  tr
+                    if(JSON.stringify(account.userid) == JSON.stringify(user_db._id))
+                      td 
+                        | Account #{j+1}:
+                      td(colspan='2')
+                        if (account.charactername1 && account.sec1 && account.birth1)
+                          table.table.table-sm(style='max-width: 20rem;')
+                            tr.table-primary
+                              td
+                                img.img-avatar(src=account.char1_pic)
+                              td
+                                strong #{account.charactername1} 
+                                | (Sec: #{account.sec1.substring(0,4)})
+                                p.m-0.pl-3 
+                                  small 
+                                    strong Rolle: 
+                                    | #{account.usage1}
+                                  br                            
+                                  small 
+                                    strong Corp: 
+                                    | #{account.corpname1}
+                                  br
+                                  small 
+                                    strong Allianz: 
+                                    | #{account.alliancename1}
+                                  small.text-muted.d-flex.justify-content-end 
+                                    i.fa.fa-clock-o 
+                                    | &nbsp; Erstellt: &nbsp;
+                                    script.
+                                      var birthday = new Date("#{account.birth1}");
+                                      document.write(DEDate(birthday));
+                        else
+                          .d-flex.justify-content-center.align-self-center Leerer Charakterslot  
+                      td(colspan='2')
+                        if (account.charactername2 && account.sec2 && account.birth2)
+                          table.table.table-sm(style='max-width: 20rem;')
+                            tr.table-primary
+                              td
+                                img.img-avatar(src=account.char2_pic)
+                              td
+                                strong #{account.charactername2} 
+                                | (Sec: #{account.sec2.substring(0,4)})
+                                p.m-0.pl-3 
+                                  small 
+                                    strong Rolle: 
+                                    | #{account.usage2}
+                                  br                            
+                                  small 
+                                    strong Corp: 
+                                    | #{account.corpname2}
+                                  br
+                                  small 
+                                    strong Allianz: 
+                                    | #{account.alliancename2}
+                                  small.text-muted.d-flex.justify-content-end 
+                                    i.fa.fa-clock-o 
+                                    | &nbsp; Erstellt: &nbsp;
+                                    script.
+                                      var birthday = new Date("#{account.birth2}");
+                                      document.write(DEDate(birthday));    
+                        else
+                          .d-flex.justify-content-center.align-self-center Leerer Charakterslot                        
+                      td(colspan='2')
+                        if (account.charactername3 && account.sec3 && account.birth3)
+                          table.table.table-sm(style='max-width: 20rem;')
+                            tr.table-primary
+                              td
+                                img.img-avatar(src=account.char3_pic)
+                              td
+                                strong #{account.charactername3} 
+                                | (Sec: #{account.sec3.substring(0,4)})
+                                p.m-0.pl-3 
+                                  small 
+                                    strong Rolle: 
+                                    | #{account.usage3}
+                                  br                            
+                                  small 
+                                    strong Corp: 
+                                    | #{account.corpname3}
+                                  br
+                                  small 
+                                    strong Allianz: 
+                                    | #{account.alliancename3}
+                                  small.text-muted.d-flex.justify-content-end 
+                                    i.fa.fa-clock-o 
+                                    | &nbsp; Erstellt: &nbsp;
+                                    script.
+                                      var birthday = new Date("#{account.birth3}");
+                                      document.write(DEDate(birthday));
+                        else
+                          .d-flex.justify-content-center.align-self-center Leerer Charakterslot  
+                      td
+                        if (current_user_type == 'Admin')
+                          a(href='/accounts/edit/'+account._id)
+                            i.mr-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                          a(href='#')
+                            i.mr-3.fa.fa-close.text-danger.delete-account(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=account._id)
+                        else if (user_db._id == current_user_id)
+                          a(href='/accounts/edit/'+account._id)
+                            i.mr-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                          a(href='#')
+                            i.mr-3.fa.fa-close.text-danger.delete-account(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=account._id)
+                        else
+                          i.mr-3.fa.fa-pencil.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                          i.mr-3.fa.fa-close.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=account._id)

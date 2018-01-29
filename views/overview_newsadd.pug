@@ -1,0 +1,66 @@
+extends layout
+
+block content
+    .row.justify-content-center
+        .col-md-6
+            .card
+                .card-header
+                    i.fa.fa-rss
+                    | Nachricht Erstellen
+                .card-body
+                    form(method='POST', action='/overview/newsadd/', id='Form', enctype="multipart/form-data")
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Titel
+                                input.form-control(type='text',  placeholder='Nachrichtentitel', name='title', id='title', value=title)
+                                span.input-group-addon
+                                    i.fa.fa-rss
+                        .form-group
+                            .input-group.mb-3
+                                p Wähle ein Bild von deiner Festplatte aus. Es wird beim Sende mit Hochgeladen. Da das Bild nachher mit einer Höhe vom 500px angezeigt wird solltest du kein zu kleines Bild wählen. Schöne Bildschirmkopien eignen sich sehr.
+                        .form-group
+                            .input-group.mb-3
+                                input.form-control.custom-file-input(type='file', placeholder='Hintergrundbild auswählen und hochladen', name='fileinput', id='fileinput', accept="image/*")
+                                span.custom-file-control
+                        .form-group
+                            .gallery.d-flex.flex-row.justify-content-center(id='gallery')
+                                .thumbnail
+                                .filemetadata.ml-3
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Nachricht
+                                textarea.form-control(rows='10', placeholder='Tippe eine Nachricht ein. Du kann auch ein <a href="http://.....">LINK</> verlingen um Links in die Nachricht zu bringen', name='news', value=news)
+                                span.input-group-addon
+                                    i.fa.fa-newspaper-o
+                        button.btn.btn-block.btn-success(type='submit') Nachricht erstellen
+
+    // initialize input fields to reset is-invalid class and refill submitted values
+    script(type='text/javascript').
+        $(document).ready(function () {
+            // Add validation class formatting to the form fields
+            function validateRegisterForm(errors){
+                for (error of errors){
+                    $('input[name=' + error.param + ']').addClass('is-invalid');
+                    $('input[name=' + error.param + ']').closest('.input-group').after('<div class="invalid-feedback d-flex">' + error.msg + '</div><br>');
+                    $('input[name=' + error.param + ']').val(error.value);
+                    $('textarea[name=' + error.param + ']').addClass('is-invalid');
+                    $('textarea[name=' + error.param + ']').closest('.input-group').after('<div class="invalid-feedback d-flex">' + error.msg + '</div><br>');
+                    $('textarea[name=' + error.param + ']').val(error.value);
+                }
+            }
+            
+            // Do the validation
+            function newsAddValidate(){
+                var val_errors = !{form_errors ? JSON.stringify(form_errors) : "undefined"};
+                val_errors && validateRegisterForm(val_errors);
+                var val_title = !{title ? JSON.stringify(title) : "undefined"};
+                val_title && $('input[name=title]').val(val_title);
+                var val_news = !{news ? JSON.stringify(news) : "undefined"};
+                val_news && $('textarea[name=news]').val(val_news); 
+                var val_fileimput = !{fileimput ? JSON.stringify(fileimput) : "undefined"};
+                val_fileimput && $('textarea[name=news]').val(val_fileimput); 
+            }
+            
+            // Form Error Validation      
+            newsAddValidate();
+        });

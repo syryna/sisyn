@@ -1,16 +1,20 @@
 const mongoose = require('mongoose');
 
-// Chat Schema
-const chatSchema = mongoose.Schema({
+// News Schema
+const newsSchema = mongoose.Schema({
     userid: {
         type: 'objectId',
         required: true
     },
-    username: {
+    bgurl: {
         type: String,
         required: true
     },
-    message: {
+    title: {
+        type: String,
+        required: true
+    },
+    news: {
         type: String,
         required: true
     },
@@ -20,4 +24,4 @@ const chatSchema = mongoose.Schema({
     }
 });
 
-let Chat = module.exports = mongoose.model('chat', chatSchema);
+let News = module.exports = mongoose.model('new', newsSchema);

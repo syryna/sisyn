@@ -57,7 +57,8 @@ block content
                                 span.input-group-addon
                                     i.fa.fa-photo
                         a.change-picture(href='#')
-                            img(id=_id, src=picture).img-thumbnail
+                            each acc_pic_url, index in acc_pic_urls
+                                img(id=index, src=acc_pic_url).img-thumbnail
                         p 
                             small Standardmäßig hast du ein Bild-Platzhalter. Wenn du EVE Accounts eingetragen hast kannst du auswählen welches Bild deiner Charaktere du angezeigt bekommen möchtest.
                         button.btn.btn-block.btn-success(type='submit') Benutzerkonto Speichern
@@ -97,4 +98,16 @@ block content
             
             // Form Error Validation      
             userEditValidate();
+
+            // put initial border on configured picture
+            img_urls = [];
+            $('.img-thumbnail').each(function(){
+                img_urls.push($(this).attr('src'));
+            });
+            for (var x in img_urls){
+                if (img_urls[x] == "#{picture}"){
+                    $('#'+x+'.img-thumbnail').addClass('border border-primary');
+                }
+            }
+         
         });

@@ -6,27 +6,84 @@ block content
             .card
                 .card-header
                     i.fa.fa-rss
-                    | Neuigkeiten
+                    | Sirius Syndicate Nachrichten
                     .btn-group.float-right
                         button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
                             i.icon-settings
                         .dropdown-menu.dropdown-menu-right
-                            a.dropdown-item(href='#') TEXT
-                .card-body
+                            a.dropdown-item(href='/overview/newsadd') Nachricht Erstellen
+                .card-body.p-0.m-0
+                    #demo.carousel.slide(data-ride='carousel')
+                        ul.carousel-indicators
+                            each news_entry, i in news
+                                if (i == 0)
+                                    li.active(data-target='#demo', data-slide-to=i)
+                                else
+                                    li(data-target='#demo', data-slide-to=i)
+                        .carousel-inner
+                            each news_entry, i in news
+                                if (i == 0)
+                                    .carousel-item.active
+                                        img(src=news_entry.bgurl, width='1100', height='500')
+                                        .carousel-caption
+                                            .d-flex.flex-row
+                                                each user_db, j in users
+                                                    if(JSON.stringify(news_entry.userid) == JSON.stringify(user_db._id))
+                                                        img.img-avatar(src=user_db.picture, alt=user_db.email)
+                                                h3.d-flex.justify-content-start= news_entry.title
+                                            .text-left= news_entry.news 
+                                            .d-flex.flex-row-reverse
+                                                span
+                                                    a.ml-auto(href="#")
+                                                        if(user.type == 'Admin' || JSON.stringify(user._id) == JSON.stringify(news_entry.userid))
+                                                            i.text-danger.fa.fa-trash-o.delete-news(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=news_entry._id)
+                                                span.align-bottom.text-muted.mr-3
+                                                    i.fa.fa-clock-o
+                                                    | &nbsp; 
+                                                    script.
+                                                        var news_entry = new Date("#{news_entry.timestamp}");
+                                                        document.write(DEDate(news_entry));              
+                                else
+                                    .carousel-item
+                                        img(src=news_entry.bgurl, width='1100', height='500')
+                                        .carousel-caption
+                                            .d-flex.flex-row
+                                                each user_db, j in users
+                                                    if(JSON.stringify(news_entry.userid) == JSON.stringify(user_db._id))
+                                                        img.img-avatar(src=user_db.picture, alt=user_db.email)
+                                                h3.d-flex.justify-content-start= news_entry.title
+                                            .text-left= news_entry.news 
+                                            .d-flex.flex-row-reverse
+                                                span
+                                                    a.ml-auto(href="#")
+                                                        if(user.type == 'Admin' || JSON.stringify(user._id) == JSON.stringify(news_entry.userid))
+                                                            i.text-danger.fa.fa-trash-o.delete-news(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=news_entry._id)
+                                                span.align-bottom.text-muted.mr-3
+                                                    i.fa.fa-clock-o
+                                                    | &nbsp;
+                                                    script.
+                                                        var news_entry = new Date("#{news_entry.timestamp}");
+                                                        document.write(DEDate(news_entry));
+                        a.carousel-control-prev(href='#demo', data-slide='prev')
+                            span.carousel-control-prev-icon
+                        a.carousel-control-next(href='#demo', data-slide='next')
+                            span.carousel-control-next-icon            
         .col-4
             .card
                 .card-header
                     i.fa.fa-rss
                     | Chat
-                .card-body
+                .card-body.p-0.m-0
                     .scrollArea
                     form
-                        .form-row
+                        .form-row.p-0.m-0
                             input.form-control.col-10(type='text', value=Nachricht, id='chatsend')
-                            button.btn.btn-block.btn-success.col-2(type='submit') Senden
+                            button.btn.btn-block.btn-success.col-2(type='submit') Senden  
+
     script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js')
     script.
         $(document).ready(function () {
+
             var socket = io.connect(window.location.host + ':3002');
             socket.on('connect', function(data) {
                 socket.emit('join', '#{user.username} (#{user._id}) joined Chat');
@@ -46,10 +103,10 @@ block content
                     // add user picture
                     output += '<div class="d-flex flex-nowrap flex-row"><div class="avatar float-left"><img class="img-avatar" src="' + data[x].picture + '"/></div>';
                     // add user name
-                    output += '<div class="d-flex flex-column w-100 px-2"><div class="d-flex flex-row"><div class="d-flex flex-column"><strong>' + data[x].username + '</strong></div>';
+                    output += '<div class="d-flex flex-column w-100 px-2"><div class="d-flex flex-row"><div class="d-flex flex-column w-100"><strong>' + data[x].username + '</strong></div>';
                     // add delete button
                     if (data[x].userid == '#{user._id}'){
-                        output += '<div class="d-flex flex-column w-100"><a class="ml-auto" href="#"><i class="text-danger fa fa-trash-o"></i></a></div></div>';
+                        output += '<div class="d-flex flex-column"><a class="ml-auto" href="#"><i class="text-danger fa fa-trash-o delete-chat" data-id="' + data[x]._id.toString() + '" data-toggle="tooltip" data-placement="bottom" title="Löschen"></i></a></div></div>';
                     } else {
                         output += '<div class="d-flex flex-column w-100"></div></div>';
                     }
@@ -57,15 +114,35 @@ block content
                     output += '<small>' + data[x].message + '</small>';
                     // add timestamp
                     var localTime = new Date(data[x].timestamp);
-                    localTime = localTime.toLocaleString();
+                    localTime = DEDate(localTime);
                     output += '<small class="text-muted mr-3 d-flex justify-content-end"><i class="fa fa-clock-o"></i>&nbsp; ' + localTime + '</small></div></div></div>';
+                    output += '<hr class="mx-3 my-0">';
                     // print it to the page
                     $('.scrollArea').append( output );
                     $('.scrollArea').stop().animate({
                         scrollTop: $('.scrollArea')[0].scrollHeight
                     }, 800);
                 }
+                // Delete Chat Ajax
+                $('.delete-chat').on('click', function (e) {
+                    $target = $(e.target);
+                    const id = $target.attr('data-id');
+                    $('#dangerModal').modal('show');
+                    $('.danger-confirm').on('click', function () {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '/overview/chat/' + id,
+                            success: function (response) {
+                                window.location.href = '/overview/show';
+                            },
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                    });
+                });
             });
+            
             $('form').submit(function(e){
                 e.preventDefault();
                 var message = {};

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// User Schema
+// delUser Schema
 const deluserSchema = mongoose.Schema({
     username: {
         type: String,

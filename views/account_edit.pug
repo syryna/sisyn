@@ -8,7 +8,7 @@ block content
           i.fa.fa-rocket
           | Account hinzufügen
         .card-body
-            form(method='POST', action='/accounts/add/new', id='Form')
+            form(method='POST', action='/accounts/edit/'+_id, id='Form')
                 .form-group
                     .input-group.mb-3
                         span.input-group-addon Account ID
@@ -21,8 +21,10 @@ block content
                         input.form-control(type='text', value=userid, name='userid', readonly='readonly')
                         span.input-group-addon
                             i.fa.fa-id-card-o
-                p Die nachfolgende Option wirkt sich auf die Suche aus. Strickte Suche (An) und Suche nach 'Lemmo' findet keine 'Lemmont'. Strickte Suche (Aus) jedoch schon, kann aber bei kurzen Namen zu sehr vielen Treffern führen. Trotzdem kann sie hilfreich sein da eine Suche nach 'Lemmont' alle Charaktere findet auch wenn der Begriff nur im Nachnamen erscheint.
-                label.form-check-label.form-check-inline Genaue/Strickte Suche:                     
+                p 
+                    small Die nachfolgende Option wirkt sich auf die Suche aus. Strickte Suche (An) und Suche nach 'Lemmo' findet keine 'Lemmont'. Strickte Suche (Aus) jedoch schon, kann aber bei kurzen Namen zu sehr vielen Treffern führen. Trotzdem kann sie hilfreich sein da eine Suche nach 'Lemmont' alle Charaktere findet auch wenn der Begriff nur im Nachnamen erscheint.
+                label.form-check-label.form-check-inline
+                    small Genaue/Strickte Suche:                     
                 .form-check.form-check-inline
                     label.form-check-label
                         input.form-check-input(type='radio', name='strict', id='strict', value='true', checked)
@@ -31,7 +33,8 @@ block content
                     label.form-check-label
                         input.form-check-input(type='radio', name='strict', id='strict', value='false')
                         small Aus
-                p Ab dem dritten Zeichen wird während deiner Eingabe eine Suche bei EVE Online API durchgeführt. Gibt es nur einen Treffer wird automatisch ausgewöhlt. Gibt es jedoch mehrere musst du manuell auswählen bevor du speicherst oder die Suche weiter einschränken.
+                p 
+                    small Ab dem dritten Zeichen wird während deiner Eingabe eine Suche bei EVE Online API durchgeführt. Das Ergebnis siehst du im Dropdown. Wähle den Charakter aus den du speichern möchtest. Hast du einen Charakter ausgewählt erscheint sein Bild daneben.
                 .form-row
                     .col
                         .form-group
@@ -172,7 +175,7 @@ block content
                                 span.input-group-addon
                                     i.fa.fa-photo  
                 .form-row
-                    button.btn.btn-block.btn-success(type='submit') Account hinzufügen
+                    button.btn.btn-block.btn-success(type='submit') Account ändern
     script.
         $(document).ready(function() {
 
@@ -236,8 +239,10 @@ block content
                                             let selected_char = $('#charactername' + elem_id).val();
                                             $('#char' + elem_id).val(charIds[0].character_id).prop('selected', true);
                                             $('#char' + elem_id).val(charIds[0].character_id).change();
+                                            console.log(charIds.length + ': '+ $('#char' + elem_id).val());
                                         }
-    
+                                        
+
                                     },
                                     error: function(req, error, details) { 
                                         console.log('error: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
@@ -249,12 +254,19 @@ block content
                                     xhr.setRequestHeader('Content-Type', 'application/json');
                                 }
                             }
+
                         },
                         error: function(req, error, details) { 
                             console.log('error: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
                         },
                         beforeSend: setHeader
                     });
+                } 
+                if (str.length == 0) {
+                    // reset all input fields
+                    $('input[name*="' + elem_id + '"]').val(null);
+                    $('#char' + elem_id).empty();
+                    $('#char' + elem_id + '_pic').attr('src', '/img/avatars/1_32.jpg');
                 }
             }
 

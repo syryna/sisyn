@@ -68,12 +68,14 @@ html(lang='en')
                         a.dropdown-item(href='/users/edit/'+user._id)
                             i.fa.fa-user
                             |  Profil ändern
-                        a.dropdown-item(href='/account/add/'+user._id)
+                        a.dropdown-item(href='/accounts/add/'+user._id)
                             i.fa.fa-rocket
                             |  EVE Account hinzufügen
-                        a.dropdown-item(href='/account/auth/')
+                        a.dropdown-item(href='/accounts/auth/')
                             i.fa.fa-rocket
-                            img(src='/img/EVE_SSO_Login_Buttons_Small_Black.png')
+                            |  EVE Character Token hinzufügen
+                            br
+                            img.mx-auto.d-block(src='/img/EVE_SSO_Login_Buttons_Small_Black.png')
                         a.dropdown-item(href='/users/logout')
                             i.fa.fa-lock
                             |  Ausloggen
@@ -87,7 +89,7 @@ html(lang='en')
                             a.nav-link(href='/overview/show')
                                 i.icon-speedometer
                                 |  Übersicht 
-                                //span.badge.badge-pill.badge-primary NEU
+                                span.badge.badge-pill.badge-primary NEU
                         li.nav-title Fly-Safe
                             li.nav-item
                                 a.nav-link(href='#')
@@ -105,6 +107,11 @@ html(lang='en')
                                     |  Kriegsstatus
                                     //span.badge.badge-pill.badge-primary NEU
                         li.nav-title Corporation
+                            li.nav-item
+                                a.nav-link(href='/users/listall')
+                                    i.icon-people
+                                    |  Corp Mitglieder
+                                    span.badge.badge-pill.badge-primary NEU
                             li.nav-item
                                 a.nav-link(href='#')
                                     i.fa.fa-cubes
@@ -148,9 +155,9 @@ html(lang='en')
                                     //span.badge.badge-pill.badge-primary NEU
                         li.nav-title Administration
                             li.nav-item
-                                a.nav-link(href='/users/userlist')
+                                a.nav-link(href='#')
                                     i.icon-people
-                                    |  Benutzer
+                                    |  xxx
                                     //span.badge.badge-pill.badge-primary NEU
 
             // Main content

@@ -8,19 +8,19 @@ block content
           i.fa.fa-rss
           | Account hinzufügen
         .card-body
-            form(method='POST', action='/account/callback'+_id, id='Form')
+            form(method='POST', action='/accounts/callback', id='Form')
                 p 
                     small Die aufgeführten Daten kommen von EVE Online.
                 .form-group
                     .input-group.mb-3
                         span.input-group-addon Charakter ID
-                        input.form-control(type='text' name='id', readonly='readonly', value=characterID)
+                        input.form-control(type='text' name='charid', readonly='readonly', value=characterID)
                         span.input-group-addon
                             i.fa.fa-id-card-o
                 .form-group
                     .input-group.mb-3
                         span.input-group-addon Charakter Name
-                        input.form-control(type='text' name='name', readonly='readonly', value=characterName)
+                        input.form-control(type='text' name='charname', readonly='readonly', value=characterName)
                         span.input-group-addon
                             i.fa.fa-id-card-o
                 .form-group
@@ -34,14 +34,14 @@ block content
                         .form-group
                             .input-group.mb-3
                                 span.input-group-addon Access Token
-                                input.form-control(type='text', name='access1', readonly='readonly', value=accessToken)
+                                input.form-control(type='text', name='access', readonly='readonly', value=accessToken)
                                 span.input-group-addon
                                     i.fa.fa-code
                     .col
                         .form-group
                             .input-group.mb-3
                                 span.input-group-addon Gültigkeit
-                                input.form-control(type='text', name='access_exp1', readonly='readonly', value=accessTokenExp)
+                                input.form-control(type='text', name='access_exp', readonly='readonly', value=accessTokenExp)
                                 span.input-group-addon
                                     i.fa.fa-clock-o
                 .form-row
@@ -49,71 +49,16 @@ block content
                         .form-group
                             .input-group.mb-3
                                 span.input-group-addon Refresh Token
-                                input.form-control(type='text', name='refresh1', readonly='readonly', value=refreshToken)
+                                input.form-control(type='text', name='refresh', readonly='readonly', value=refreshToken)
                                 span.input-group-addon
                                     i.fa.fa-code
                     .col
                         .form-group
                             .input-group.mb-3
                                 span.input-group-addon Gültigkeit
-                                input.form-control(type='text', name='refresh_exp1', readonly='readonly', value='unbegrenzt')
+                                input.form-control(type='text', name='refresh_exp', readonly='readonly', value='unbegrenzt')
                                 span.input-group-addon
                                     i.fa.fa-clock-o
-
-
-
-    script.
-        $(document).ready(function() {
-            // Getting URL Parameters
-            var getUrlParameter = function getUrlParameter(sParam) {
-                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-                    sURLVariables = sPageURL.split('&'),
-                    sParameterName,
-                    i;
-
-                for (i = 0; i < sURLVariables.length; i++) {
-                    sParameterName = sURLVariables[i].split('=');
-
-                    if (sParameterName[0] === sParam) {
-                        return sParameterName[1] === undefined ? true : sParameterName[1];
-                    }
-                }
-            };
-            var code = getUrlParameter('code');
-            
-            // Get Access and Refresh Tokens
-            if (!code){
-                console.log(code);
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'https://login.eveonline.com/oauth/token',
-                    data: {
-                        "grant_type":"authorization_code",
-                        "code":code
-                        },
-                    dataType: 'json',
-                    success: function(data) { 
-                        accessToken = data;
-                        console.log('return: ' + JSON.stringify(accessToken));
-                        // Fill Multiselect
-                        //$('#char1').empty();
-                        //var x = 0;
-                        //for (x in charIds){
-                            //$('#char1').append('<option value="' + charIds[x].character_id + '">' + charIds[x].character_name + '</option>');
-                        //}
-                    },
-                    error: function(req, error, details) { 
-                        console.log('error: ' + JSON.stringify(error) + ' details: ' + JSON.stringify(req.responseText));
-                    },
-                    beforeSend: setHeader
-                });
-
-                function setHeader(xhr) {
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.setRequestHeader('Authorization', 'Basic ' + 'ODYyODg4MjcwZGI4NGZkNWEzMGIwYmExMGIxOWU2YTg6RDZmRkRoVjdHOThmR0cwQU5ZQ1hLQXVsN2dQVEtoYzBORHV5M2F2bQ==');
-                    xhr.setRequestHeader('Host', 'login.eveonline.com');
-                }
-            }
-
-        });
+                .form-row
+                    .col
+                        button.btn.btn-block.btn-success(type='submit') Token speichern
