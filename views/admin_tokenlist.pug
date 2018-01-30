@@ -22,13 +22,34 @@ block content
                                 tr
                                     td= token.charname
                                     td= token.charid
-                                    td(data-toggle='tooltip', data-placement='bottom', title=token.refreshtoken) HOVER
-                                    td(data-toggle='tooltip', data-placement='bottom', title=token.accesstoken) HOVER
+                                    td(data-toggle='tooltip', data-placement='right', title=token.refreshtoken) HOVER
+                                    td(data-toggle='tooltip', data-placement='right', title=token.accesstoken) HOVER
                                     td
                                         script.
                                             var tokenexp = new Date("#{token.accesstokenexp}");
                                             document.write(DEDate(tokenexp));  
-                                    td(data-toggle='tooltip', data-placement='bottom', title=token.scopes) HOVER
+                                    td(data-toggle='tooltip', data-placement='right', title=token.scopes) HOVER
+                                tr
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                tr
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                tr
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                    td -
+                                    td -                                
                             else 
                                 tr
                                     td -
