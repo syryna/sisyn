@@ -194,10 +194,12 @@ block content
                                 th Ziel-Sys
                                 th Datum
                                 th Status
-                        tbody.clickable(data-toggle='collapse' data-target='#group-of-rows-1' aria-expanded='false' aria-controls='group-of-rows-1')
+                        //tbody.clickable(data-toggle='collapse' data-target='#group-of-rows-1' aria-expanded='false' aria-controls='group-of-rows-1')
+                        tbody
                             tr
                                 td
-                                    i.fa.fa-arrows-v(aria-hidden='true')
+                                    //i.fa.fa-arrows-v(aria-hidden='true')
+                                    i.fa.fa-arrows-v.expand-arrow(aria-hidden='true', data-id='group-of-rows-1')
                                 td
                                     .span.badge.badge-warning Material
                                 td LQ-AHE (Omist)
@@ -267,6 +269,13 @@ block content
                                             td 
                                                 .span.badge.badge-success FERTIG 
 
-                                        
+    script.
+        $('.expand-arrow').on('click', function (e) {
+            e.preventDefault();
+            $target = $(e.target);
+            const id = $target.attr('data-id');
+            console.log(id);
+            $('#' + id).toggleClass('show');
+        });                                    
 
                                 
