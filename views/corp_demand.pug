@@ -18,13 +18,16 @@ block content
                             tr
                                 th Typ
                                 th Anzahl
-                                th LinkProdukt
+                                th Produkt
+                                th Volumen
+                                th Erstellt
                                 th(style='max-width: 10rem; min-width: 10rem;') Ersteller
                                 th Start-Sys
                                 th Start-Loc
                                 th Ziel-Sys
                                 th Ziel-Loc
                                 th Kommentar
+                                th Angenommen
                                 th(style='max-width: 10rem; min-width: 10rem;') Bearbeiter
                                 th Status
                         tbody
@@ -33,6 +36,8 @@ block content
                                     .span.badge.badge-danger Mining
                                 td MAX
                                 td Tritanium
+                                td -
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;')
                                     img.img-avatar(src=user.picture)
                                     a(href='x'+jobid)
@@ -44,6 +49,7 @@ block content
                                 td LQ-AHE (Omist)
                                 td GLADSHEIM
                                 td Bitte in Hangar 03 
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;') -
                                     a(href='#')
                                         i.ml-3.fa.fa-check-square-o.text-success(data-toggle='tooltip', data-placement='bottom', title='Annehmen', data-id=jobid)
@@ -58,6 +64,8 @@ block content
                                     .span.badge.badge-dark Transport
                                 td 1000000
                                 td Xenotime
+                                td 10000000 m³
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;')
                                     img.img-avatar(src=user.picture)
                                     a(href='x'+jobid)
@@ -69,6 +77,7 @@ block content
                                 td J213653 (WH)
                                 td ELDSMIDJU
                                 td Bitte in Hangar 03 
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;')
                                     img.img-avatar(src=user.picture)
                                     a(href='#')
@@ -78,12 +87,43 @@ block content
                                     a(href='#')
                                         i.ml-3.fa.fa-flag-checkered.text-dark(data-toggle='tooltip', data-placement='bottom', title='Erledigt', data-id=jobid)
                                 td 
-                                    .span.badge.badge-warning ARBEIT  
+                                    .span.badge.badge-warning IN ARBEIT  
+                            tr
+                                td
+                                    .span.badge.badge-dark Transport
+                                td 10
+                                td Femanle Exotic Dancer
+                                td 10 m³3
+                                td 30.01.2018 14:00:00
+                                td(style='max-width: 10rem; min-width: 10rem;')
+                                    img.img-avatar(src=user.picture)
+                                    a(href='x'+jobid)
+                                        i.ml-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                                    a(href='#')
+                                        i.ml-3.fa.fa-close.text-danger.delete-XXXX(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=jobid)
+                                td Jita (The Forge)
+                                td IV - Moon 4 - Caldari Navy Assembly Plant 
+                                td LQ-AHE (Omist)
+                                td Gladsheim
+                                td finger weg, sind für Cheffe
+                                td 30.01.2018 14:00:00
+                                td(style='max-width: 10rem; min-width: 10rem;')
+                                    img.img-avatar(src=user.picture)
+                                    a(href='#')
+                                        i.ml-3.fa.fa-check-square-o.text-success(data-toggle='tooltip', data-placement='bottom', title='Annehmen', data-id=jobid)
+                                    a(href='#')
+                                        i.ml-3.fa.fa-square-o.text-danger(data-toggle='tooltip', data-placement='bottom', title='Aufgeben', data-id=jobid)
+                                    a(href='#')
+                                        i.ml-3.fa.fa-flag-checkered.text-dark(data-toggle='tooltip', data-placement='bottom', title='Erledigt', data-id=jobid)
+                                td 
+                                    .span.badge.badge-warning LIEFERUNG 
                             tr
                                 td
                                     .span.badge.badge-primary Production
                                 td 50000
                                 td Scourge Fury Heavy Missle
+                                td 1500 m³
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;')
                                     img.img-avatar(src=user.picture)
                                     a(href='x'+jobid)
@@ -95,6 +135,7 @@ block content
                                 td LQ-AHE (Omist)
                                 td GLADSHEIM
                                 td Vertrag oder pers. Hangar
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;') -
                                     a(href='#')
                                         i.ml-3.fa.fa-check-square-o.text-success(data-toggle='tooltip', data-placement='bottom', title='Annehmen', data-id=jobid)
@@ -109,6 +150,8 @@ block content
                                     .span.badge.badge-warning Material
                                 td 1000
                                 td Mechanical Parts
+                                td 1500 m³
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;')
                                     img.img-avatar(src=user.picture)
                                     a(href='x'+jobid)
@@ -120,6 +163,7 @@ block content
                                 td LQ-AHE (Omist)
                                 td GLADSHEIM
                                 td bitte PI umstellen
+                                td 30.01.2018 14:00:00
                                 td(style='max-width: 10rem; min-width: 10rem;') 
                                     img.img-avatar(src=user.picture)
                                     a(href='#')
@@ -130,4 +174,99 @@ block content
                                         i.ml-3.fa.fa-flag-checkered.text-dark(data-toggle='tooltip', data-placement='bottom', title='Erledigt', data-id=jobid)
                                 td 
                                     .span.badge.badge-success FERTIG 
+    .row
+        .col-lg-12
+            .card
+                .card-header
+                    i.fa.fa-photo
+                    | Verfügbare Aufträge
+                    .btn-group.float-right
+                        button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
+                            i.icon-settings
+                        .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='#') Auftrag Erstellen
+                .card-body
+                    table.table.table-sm.table-responsive
+                        thead
+                            tr
+                                th 
+                                th Typ
+                                th Ziel-Sys
+                                th Datum
+                                th Status
+                        tbody.clickable(data-toggle='collapse' data-target='#group-of-rows-1' aria-expanded='false' aria-controls='group-of-rows-1')
+                            tr
+                                td
+                                    i.fa.fa-arrows-v(aria-hidden='true')
+                                td
+                                    .span.badge.badge-warning Material
+                                td LQ-AHE (Omist)
+                                td 30.01.2018 14:00:00
+                                td
+                                    .span.badge.badge-success FERTIG
+                        tbody(id='group-of-rows-1', class='collapse')
+                            tr
+                                td
+                                td(colspan='4')
+                                    table.w-100
+                                        tr
+                                            th Type
+                                            td
+                                                .span.badge.badge-warning Material
+                                        tr
+                                            th Anzahl
+                                            td 1000
+                                        tr
+                                            th Produkt
+                                            td Mechanical Parts
+                                        tr
+                                            th Volumen
+                                            td 1500 m³
+                                        tr
+                                            th Erstellt
+                                            td 30.01.2018 14:00:00
+                                        tr
+                                            th Ersteller
+                                            td 
+                                                img.img-avatar(src=user.picture)
+                                                strong &nbsp; #{user.username}
+                                                a(href='x'+jobid)
+                                                    i.ml-3.fa.fa-pencil.text-dark(data-toggle='tooltip', data-placement='bottom', title='Ändern')
+                                                a(href='#')
+                                                    i.ml-3.fa.fa-close.text-danger.delete-XXXX(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=jobid)
+                                        tr
+                                            th Start System
+                                            td -
+                                        tr
+                                            th Start Station
+                                            td -
+                                        tr
+                                            th Ziel System
+                                            td -
+                                        tr
+                                            th Ziel Station
+                                            td -
+                                        tr
+                                            th Kommentar
+                                            td bitte PI umstellen
+                                        tr
+                                            th Angenommen
+                                            td 30.01.2018 14:00:00
+                                        tr
+                                            th Bearbeiter
+                                            td 
+                                                img.img-avatar(src=user.picture)
+                                                a(href='#')
+                                                    i.ml-3.fa.fa-check-square-o.text-success(data-toggle='tooltip', data-placement='bottom', title='Annehmen', data-id=jobid)
+                                                a(href='#')
+                                                    i.ml-3.fa.fa-square-o.text-danger(data-toggle='tooltip', data-placement='bottom', title='Aufgeben', data-id=jobid)
+                                                a(href='#')
+                                                    i.ml-3.fa.fa-flag-checkered.text-dark(data-toggle='tooltip', data-placement='bottom', title='Erledigt', data-id=jobid)
+                                        tr
+                                            th Status
+                                            td 
+                                                .span.badge.badge-success FERTIG 
+
+                                        
+
                                 
