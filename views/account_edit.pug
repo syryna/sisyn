@@ -1,181 +1,181 @@
 extends layout
 
 block content
-  .row
-    .col-12
-      .card
-        .card-header
-          i.fa.fa-rocket
-          | Account hinzufügen
-        .card-body
-            form(method='POST', action='/accounts/edit/'+_id, id='Form')
-                .form-group
-                    .input-group.mb-3
-                        span.input-group-addon Account ID
-                        input.form-control(type='text', value=accid, name='accid', readonly='readonly')
-                        span.input-group-addon
-                            i.fa.fa-id-card-o
-                .form-group
-                    .input-group.mb-3
-                        span.input-group-addon Benutzer ID
-                        input.form-control(type='text', value=userid, name='userid', readonly='readonly')
-                        span.input-group-addon
-                            i.fa.fa-id-card-o
-                p 
-                    small Die nachfolgende Option wirkt sich auf die Suche aus. Strickte Suche (An) und Suche nach 'Lemmo' findet keine 'Lemmont'. Strickte Suche (Aus) jedoch schon, kann aber bei kurzen Namen zu sehr vielen Treffern führen. Trotzdem kann sie hilfreich sein da eine Suche nach 'Lemmont' alle Charaktere findet auch wenn der Begriff nur im Nachnamen erscheint.
-                label.form-check-label.form-check-inline
-                    small Genaue/Strickte Suche:                     
-                .form-check.form-check-inline
-                    label.form-check-label
-                        input.form-check-input(type='radio', name='strict', id='strict', value='true', checked)
-                        small An
-                .form-check.form-check-inline
-                    label.form-check-label
-                        input.form-check-input(type='radio', name='strict', id='strict', value='false')
-                        small Aus
-                p 
-                    small Ab dem dritten Zeichen wird während deiner Eingabe eine Suche bei EVE Online API durchgeführt. Das Ergebnis siehst du im Dropdown. Wähle den Charakter aus den du speichern möchtest. Hast du einen Charakter ausgewählt erscheint sein Bild daneben.
-                .form-row
-                    .col
-                        .form-group
-                            .input-group.mb-3
-                                span.input-group-addon Charakter 1
-                                input.form-control(type='hidden',  id='character1', name='character1', value=character1)
-                                input.form-control(type='text', id='charactername1', name='charactername1', value=charactername1, placeholder='Charname', data-id='1')
-                                span.input-group-addon
-                                    i.icon-user
-                            .input-group.mb-3
-                                span.input-group-addon Aufgabe
-                                input.form-control(type='text', id='usage1', name='usage1', value=usage1, placeholder='PVE, Miner, Orca Pilot, etc.')
-                                span.input-group-addon
-                                    i.fa.fa-wrench
-                            .input-group.mb-3
-                                span.input-group-addon Corporation
-                                input.form-control(type='text', id='corp1', name='corp1', readonly='readonly')
-                                input.form-control(type='text', id='corpname1', name='corpname1', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Allianz
-                                input.form-control(type='text', id='alliance1', name='alliance1', readonly='readonly')
-                                input.form-control(type='text', id='alliancename1', name='alliancename1', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Security
-                                input.form-control(type='text', id='sec1', name='sec1', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Geburt
-                                input.form-control(type='text', id='birth1', name='birth1', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                    .col
-                        .form-group
-                            .input-group.mb-3
-                                span.input-group-addon
-                                    img(id='char1_pic', src='/img/avatars/1_32.jpg').img-thumbnail
-                                    input.form-control(type='hidden', name='char1_pic')
-                                select.form-control(id='char1',size=4)
-                                span.input-group-addon
-                                    i.fa.fa-photo  
-                hr.mx-3.my-0
-                br
-                .form-row
-                    .col
-                        .form-group
-                            .input-group.mb-3
-                                span.input-group-addon Charakter 2
-                                input.form-control(type='hidden',  id='character2', name='character2', value=character2)
-                                input.form-control(type='text', id='charactername2', name='charactername2', value=charactername2, placeholder='Charname', data-id='2')
-                                span.input-group-addon
-                                    i.icon-user
-                            .input-group.mb-3
-                                span.input-group-addon Aufgabe
-                                input.form-control(type='text', id='usage2', name='usage2', value=usage2, placeholder='PVE, Miner, Orca Pilot, etc.')
-                                span.input-group-addon
-                                    i.fa.fa-wrench
-                            .input-group.mb-3
-                                span.input-group-addon Corporation
-                                input.form-control(type='text', id='corp2', name='corp2', readonly='readonly')
-                                input.form-control(type='text', id='corpname2', name='corpname2', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Allianz
-                                input.form-control(type='text', id='alliance2', name='alliance2', readonly='readonly')
-                                input.form-control(type='text', id='alliancename2', name='alliancename2', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Security
-                                input.form-control(type='text', id='sec2', name='sec2', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Geburt
-                                input.form-control(type='text', id='birth2', name='birth2', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                    .col
-                        .form-group
-                            .input-group.mb-3
-                                span.input-group-addon
-                                    img(id='char2_pic', src='/img/avatars/1_32.jpg').img-thumbnail
-                                    input.form-control(type='hidden', name='char2_pic')
-                                select.form-control(id='char2',size=4)
-                                span.input-group-addon
-                                    i.fa.fa-photo  
-                hr.mx-3.my-0
-                br
-                .form-row
-                    .col
-                        .form-group
-                            .input-group.mb-3
-                                span.input-group-addon Charakter 3
-                                input.form-control(type='hidden',  id='character3', name='character3', value=character3)
-                                input.form-control(type='text', id='charactername3', name='charactername3', value=charactername3, placeholder='Charname', data-id='3')
-                                span.input-group-addon
-                                    i.icon-user
-                            .input-group.mb-3
-                                span.input-group-addon Aufgabe
-                                input.form-control(type='text', id='usage3', name='usage3', value=usage3, placeholder='PVE, Miner, Orca Pilot, etc.')
-                                span.input-group-addon
-                                    i.fa.fa-wrench
-                            .input-group.mb-3
-                                span.input-group-addon Corporation
-                                input.form-control(type='text', id='corp3', name='corp3', readonly='readonly')
-                                input.form-control(type='text', id='corpname3', name='corpname3', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Allianz
-                                input.form-control(type='text', id='alliance3', name='alliance3', readonly='readonly')
-                                input.form-control(type='text', id='alliancename3', name='alliancename3', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Security
-                                input.form-control(type='text', id='sec3', name='sec3', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                            .input-group.mb-3
-                                span.input-group-addon Geburt
-                                input.form-control(type='text', id='birth3', name='birth3', readonly='readonly')
-                                span.input-group-addon
-                                    i.fa.fa-check-circle-o
-                    .col
-                        .form-group
-                            .input-group.mb-3
-                                span.input-group-addon
-                                    img(id='char3_pic', src='/img/avatars/1_32.jpg').img-thumbnail
-                                    input.form-control(type='hidden', name='char3_pic')
-                                select.form-control(id='char3',size=4)
-                                span.input-group-addon
-                                    i.fa.fa-photo  
-                .form-row
-                    button.btn.btn-block.btn-success(type='submit') Account ändern
+    .row
+        .col-lg-12
+        .card
+            .card-header
+                i.fa.fa-rocket
+                | Account ändern
+            .card-body
+                form(method='POST', action='/accounts/edit/'+_id, id='Form')
+                    .form-group
+                        .input-group.mb-3
+                            span.input-group-addon Account ID
+                            input.form-control(type='text', value=accid, name='accid', readonly='readonly')
+                            span.input-group-addon
+                                i.fa.fa-id-card-o
+                    .form-group
+                        .input-group.mb-3
+                            span.input-group-addon Benutzer ID
+                            input.form-control(type='text', value=userid, name='userid', readonly='readonly')
+                            span.input-group-addon
+                                i.fa.fa-id-card-o
+                    p 
+                        small Die nachfolgende Option wirkt sich auf die Suche aus. Strickte Suche (An) und Suche nach 'Lemmo' findet keine 'Lemmont'. Strickte Suche (Aus) jedoch schon, kann aber bei kurzen Namen zu sehr vielen Treffern führen. Trotzdem kann sie hilfreich sein da eine Suche nach 'Lemmont' alle Charaktere findet auch wenn der Begriff nur im Nachnamen erscheint.
+                    label.form-check-label.form-check-inline
+                        small Genaue/Strickte Suche:                     
+                    .form-check.form-check-inline
+                        label.form-check-label
+                            input.form-check-input(type='radio', name='strict', id='strict', value='true', checked)
+                            small An
+                    .form-check.form-check-inline
+                        label.form-check-label
+                            input.form-check-input(type='radio', name='strict', id='strict', value='false')
+                            small Aus
+                    p 
+                        small Ab dem dritten Zeichen wird während deiner Eingabe eine Suche bei EVE Online API durchgeführt. Das Ergebnis siehst du im Dropdown. Wähle den Charakter aus den du speichern möchtest. Hast du einen Charakter ausgewählt erscheint sein Bild daneben.
+                    .form-row
+                        .col
+                            .form-group
+                                .input-group.mb-3
+                                    span.input-group-addon Charakter 1
+                                    input.form-control(type='hidden',  id='character1', name='character1', value=character1)
+                                    input.form-control(type='text', id='charactername1', name='charactername1', value=charactername1, placeholder='Charname', data-id='1')
+                                    span.input-group-addon
+                                        i.icon-user
+                                .input-group.mb-3
+                                    span.input-group-addon Aufgabe
+                                    input.form-control(type='text', id='usage1', name='usage1', value=usage1, placeholder='PVE, Miner, Orca Pilot, etc.')
+                                    span.input-group-addon
+                                        i.fa.fa-wrench
+                                .input-group.mb-3
+                                    span.input-group-addon Corporation
+                                    input.form-control(type='text', id='corp1', name='corp1', readonly='readonly')
+                                    input.form-control(type='text', id='corpname1', name='corpname1', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Allianz
+                                    input.form-control(type='text', id='alliance1', name='alliance1', readonly='readonly')
+                                    input.form-control(type='text', id='alliancename1', name='alliancename1', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Security
+                                    input.form-control(type='text', id='sec1', name='sec1', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Geburt
+                                    input.form-control(type='text', id='birth1', name='birth1', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                        .col
+                            .form-group
+                                .input-group.mb-3
+                                    span.input-group-addon
+                                        img(id='char1_pic', src='/img/avatars/1_32.jpg').img-thumbnail
+                                        input.form-control(type='hidden', name='char1_pic')
+                                    select.form-control(id='char1',size=4)
+                                    span.input-group-addon
+                                        i.fa.fa-photo  
+                    hr.mx-3.my-0
+                    br
+                    .form-row
+                        .col
+                            .form-group
+                                .input-group.mb-3
+                                    span.input-group-addon Charakter 2
+                                    input.form-control(type='hidden',  id='character2', name='character2', value=character2)
+                                    input.form-control(type='text', id='charactername2', name='charactername2', value=charactername2, placeholder='Charname', data-id='2')
+                                    span.input-group-addon
+                                        i.icon-user
+                                .input-group.mb-3
+                                    span.input-group-addon Aufgabe
+                                    input.form-control(type='text', id='usage2', name='usage2', value=usage2, placeholder='PVE, Miner, Orca Pilot, etc.')
+                                    span.input-group-addon
+                                        i.fa.fa-wrench
+                                .input-group.mb-3
+                                    span.input-group-addon Corporation
+                                    input.form-control(type='text', id='corp2', name='corp2', readonly='readonly')
+                                    input.form-control(type='text', id='corpname2', name='corpname2', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Allianz
+                                    input.form-control(type='text', id='alliance2', name='alliance2', readonly='readonly')
+                                    input.form-control(type='text', id='alliancename2', name='alliancename2', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Security
+                                    input.form-control(type='text', id='sec2', name='sec2', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Geburt
+                                    input.form-control(type='text', id='birth2', name='birth2', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                        .col
+                            .form-group
+                                .input-group.mb-3
+                                    span.input-group-addon
+                                        img(id='char2_pic', src='/img/avatars/1_32.jpg').img-thumbnail
+                                        input.form-control(type='hidden', name='char2_pic')
+                                    select.form-control(id='char2',size=4)
+                                    span.input-group-addon
+                                        i.fa.fa-photo  
+                    hr.mx-3.my-0
+                    br
+                    .form-row
+                        .col
+                            .form-group
+                                .input-group.mb-3
+                                    span.input-group-addon Charakter 3
+                                    input.form-control(type='hidden',  id='character3', name='character3', value=character3)
+                                    input.form-control(type='text', id='charactername3', name='charactername3', value=charactername3, placeholder='Charname', data-id='3')
+                                    span.input-group-addon
+                                        i.icon-user
+                                .input-group.mb-3
+                                    span.input-group-addon Aufgabe
+                                    input.form-control(type='text', id='usage3', name='usage3', value=usage3, placeholder='PVE, Miner, Orca Pilot, etc.')
+                                    span.input-group-addon
+                                        i.fa.fa-wrench
+                                .input-group.mb-3
+                                    span.input-group-addon Corporation
+                                    input.form-control(type='text', id='corp3', name='corp3', readonly='readonly')
+                                    input.form-control(type='text', id='corpname3', name='corpname3', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Allianz
+                                    input.form-control(type='text', id='alliance3', name='alliance3', readonly='readonly')
+                                    input.form-control(type='text', id='alliancename3', name='alliancename3', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Security
+                                    input.form-control(type='text', id='sec3', name='sec3', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                                .input-group.mb-3
+                                    span.input-group-addon Geburt
+                                    input.form-control(type='text', id='birth3', name='birth3', readonly='readonly')
+                                    span.input-group-addon
+                                        i.fa.fa-check-circle-o
+                        .col
+                            .form-group
+                                .input-group.mb-3
+                                    span.input-group-addon
+                                        img(id='char3_pic', src='/img/avatars/1_32.jpg').img-thumbnail
+                                        input.form-control(type='hidden', name='char3_pic')
+                                    select.form-control(id='char3',size=4)
+                                    span.input-group-addon
+                                        i.fa.fa-photo  
+                    .form-row
+                        button.btn.btn-block.btn-success(type='submit') Account ändern
     script.
         $(document).ready(function() {
 

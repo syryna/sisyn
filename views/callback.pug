@@ -1,64 +1,64 @@
 extends layout
 
 block content
-  .row
-    .col-12
-      .card
-        .card-header
-          i.fa.fa-id-card-o
-          | Tokenhinzufügen
-        .card-body
-            form(method='POST', action='/accounts/callback', id='Form')
-                p 
-                    small Die aufgeführten Daten kommen von EVE Online.
-                .form-group
-                    .input-group.mb-3
-                        span.input-group-addon Charakter ID
-                        input.form-control(type='text' name='charid', readonly='readonly', value=characterID)
-                        span.input-group-addon
-                            i.fa.fa-id-card-o
-                .form-group
-                    .input-group.mb-3
-                        span.input-group-addon Charakter Name
-                        input.form-control(type='text' name='charname', readonly='readonly', value=characterName)
-                        span.input-group-addon
-                            i.fa.fa-id-card-o
-                .form-group
-                    .input-group.mb-3
-                        span.input-group-addon Scopes
-                        input.form-control(type='text' name='scopes', readonly='readonly', value=scopes)
-                        span.input-group-addon
-                            i.fa.fa-id-card-o
-                .form-row
-                    .col
+    .row
+        .col-lg-12
+            .card
+                .card-header
+                i.fa.fa-id-card-o
+                | Tokenhinzufügen
+                .card-body
+                    form(method='POST', action='/accounts/callback', id='Form')
+                        p 
+                            small Die aufgeführten Daten kommen von EVE Online.
                         .form-group
                             .input-group.mb-3
-                                span.input-group-addon Access Token
-                                input.form-control(type='text', name='access', readonly='readonly', value=accessToken)
+                                span.input-group-addon Charakter ID
+                                input.form-control(type='text' name='charid', readonly='readonly', value=characterID)
                                 span.input-group-addon
-                                    i.fa.fa-code
-                    .col
+                                    i.fa.fa-id-card-o
                         .form-group
                             .input-group.mb-3
-                                span.input-group-addon Gültigkeit
-                                input.form-control(type='text', name='access_exp', readonly='readonly', value=accessTokenExp)
+                                span.input-group-addon Charakter Name
+                                input.form-control(type='text' name='charname', readonly='readonly', value=characterName)
                                 span.input-group-addon
-                                    i.fa.fa-clock-o
-                .form-row
-                    .col
+                                    i.fa.fa-id-card-o
                         .form-group
                             .input-group.mb-3
-                                span.input-group-addon Refresh Token
-                                input.form-control(type='text', name='refresh', readonly='readonly', value=refreshToken)
+                                span.input-group-addon Scopes
+                                input.form-control(type='text' name='scopes', readonly='readonly', value=scopes)
                                 span.input-group-addon
-                                    i.fa.fa-code
-                    .col
-                        .form-group
-                            .input-group.mb-3
-                                span.input-group-addon Gültigkeit
-                                input.form-control(type='text', name='refresh_exp', readonly='readonly', value='unbegrenzt')
-                                span.input-group-addon
-                                    i.fa.fa-clock-o
-                .form-row
-                    .col
-                        button.btn.btn-block.btn-success(type='submit') Token speichern
+                                    i.fa.fa-id-card-o
+                        .form-row
+                            .col
+                                .form-group
+                                    .input-group.mb-3
+                                        span.input-group-addon Access Token
+                                        input.form-control(type='text', name='access', readonly='readonly', value=accessToken)
+                                        span.input-group-addon
+                                            i.fa.fa-code
+                            .col
+                                .form-group
+                                    .input-group.mb-3
+                                        span.input-group-addon Gültigkeit
+                                        input.form-control(type='text', name='access_exp', readonly='readonly', value=accessTokenExp)
+                                        span.input-group-addon
+                                            i.fa.fa-clock-o
+                        .form-row
+                            .col
+                                .form-group
+                                    .input-group.mb-3
+                                        span.input-group-addon Refresh Token
+                                        input.form-control(type='text', name='refresh', readonly='readonly', value=refreshToken)
+                                        span.input-group-addon
+                                            i.fa.fa-code
+                            .col
+                                .form-group
+                                    .input-group.mb-3
+                                        span.input-group-addon Gültigkeit
+                                        input.form-control(type='text', name='refresh_exp', readonly='readonly', value='unbegrenzt')
+                                        span.input-group-addon
+                                            i.fa.fa-clock-o
+                        .form-row
+                            .col
+                                button.btn.btn-block.btn-success(type='submit') Token speichern

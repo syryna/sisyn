@@ -2,7 +2,7 @@ extends layout
 
 block content
     .row
-        .col-7
+        .col-lg-7
             .card
                 .card-header
                     i.fa.fa-photo
@@ -21,32 +21,32 @@ block content
                                 .thumbnail
                                 .filemetadata.ml-3
                         button.btn.btn-block.btn-success(type='submit') Bild Hochladen
-        .col-5
+        .col-lg-5
             .card
                 .card-header
                     i.fa.fa-list
                     | Bilder Liste in /uploads
                 .card-body
-                    table.table.table-sm
+                    table.table.table-sm.table-responsive
                         thead
-                        tr
-                            th Dateiname
-                            th Größe (Bytes)
-                            th Link
-                            th 
+                            tr
+                                th Dateiname
+                                th Größe (Bytes)
+                                th Link
+                                th 
                         tbody
-                        each file in files
-                            tr
-                                td= file.file_name
-                                td= file.file_size
-                                td
-                                    a(href=file.file_link, target='_blank') LINK
-                                td
-                                    a(href='#')
-                                        i.mr-3.fa.fa-close.text-danger.delete-pic(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=file.file_name)
-                        else 
-                            tr
-                                td keine Dateien gefunden
-                                td -
-                                td -
-                                td -
+                            each file in files
+                                tr
+                                    td= file.file_name
+                                    td= file.file_size
+                                    td
+                                        a(href=file.file_link, target='_blank') LINK
+                                    td
+                                        a(href='#')
+                                            i.mr-3.fa.fa-close.text-danger.delete-pic(data-toggle='tooltip', data-placement='bottom', title='Löschen', data-id=file.file_name)
+                            else 
+                                tr
+                                    td keine Dateien gefunden
+                                    td -
+                                    td -
+                                    td -

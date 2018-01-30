@@ -57,7 +57,7 @@ html(lang='en')
                         if (!user)
                             img.img-avatar(src='/img/avatars/1_32.jpg')
                         else if (user.picture != 'false')
-                            img.img-avatar(src=user.picture, alt=user.email)
+                            img.img-avatar(src=user.picture)
                         else 
                             img.img-avatar(src='/img/avatars/1_32.jpg')
                         if user
@@ -118,7 +118,7 @@ html(lang='en')
                                     |  Lager Status
                                     //span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link(href='/corp/demand')
                                     i.fa.fa-sign-in
                                     |  Bedarf
                                     span.badge.badge-pill.badge-warning WORK
