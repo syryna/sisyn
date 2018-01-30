@@ -78,11 +78,13 @@ block content
                       i.mr-3.fa.fa-lock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Sperren')
                       i.mr-3.fa.fa-unlock.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Freigeben')
                       i.mr-3.fa.fa-plus-square-o.text-secondary(data-toggle='tooltip', data-placement='bottom', title='Account hinzufügen')
+                - var acc_count = 0;
                 each account, j in accounts
                   tr
                     if(JSON.stringify(account.userid) == JSON.stringify(user_db._id))
+                      - acc_count++;
                       td 
-                        | Account #{j+1}:
+                        | Account #{acc_count}:
                       td(colspan='2', width=)
                         if (account.charactername1 && account.sec1 && account.birth1)
                           table.table.table-sm(style='max-width: 20rem; min-width: 20rem;')
