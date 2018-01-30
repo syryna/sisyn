@@ -217,18 +217,42 @@ router.post('/edit/:id', ensureAuthenticated, function(req, res) {
 
     // Validation Errors
     if (errors[0]) {
-        res.render('user_edit', {
-            form_errors: errors,
-            _id: user._id,
-            username: user.username,
-            firstname: user.firstname,
-            age: user.age,
-            email: user.email,
-            picture: user.picture,
-            user: user
-        });
-        httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+        
+        //Load all character pictures from accounts
+        let query = { userid: user._id }
+        let acc_pic_urls = [];
 
+        Account.find(query, function(err, accounts) {
+            if (err) {
+                dblog.error('Error finding accounts during USER EDIT: ' + err);
+            } else {
+                //if char picture url not empty
+                for (x in accounts){
+                    if (accounts[x].char1_pic) {
+                        acc_pic_urls.push(accounts[x].char1_pic);
+                    }
+                    if (accounts[x].char2_pic) {
+                        acc_pic_urls.push(accounts[x].char2_pic);
+                    }
+                    if (accounts[x].char3_pic) {
+                        acc_pic_urls.push(accounts[x].char3_pic);
+                    }
+                }
+                
+                httplog.info('User: ' + req.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+                res.render('user_edit', {
+                    form_errors: errors,
+                    _id: user._id,
+                    username: user.username,
+                    firstname: user.firstname,
+                    age: user.age,
+                    email: user.email,
+                    picture: user.picture,
+                    user: user,
+                    acc_pic_urls: acc_pic_urls
+                });
+            }
+        });
         // Validation Success
     } else {
         // Password Encryption
