@@ -1,0 +1,257 @@
+extends layout
+
+block content
+    .row
+        .col-lg-12
+            .card
+                .card-header
+                    i.fa.fa-sign-in
+                    | Preisabfrage
+                .card-body
+                    .form-group.col-lg-4
+                        .input-group.mb-3
+                            span.input-group-addon Region
+                            select.form-control(value=region, name='region', id='region')
+                            span.input-group-addon
+                                i.icon-graph
+                    .form-group.col-lg-4
+                        .input-group.mb-3
+                            img(src='https://image.eveonline.com/Type/0_32.png', id='product_icon')
+                            input.form-control.col-lg-12(type='text', value=product, name='product' id='product', placeholder='gib ein Produkt ein...')
+                    p Gib ein EVE Gegenstand/Produkt aus dem Markt an. Während du tippst wird es vervollständigt. Nur ein 'Klick' auf den Gegenstand im Dropdown startet eine Suche über die Marktdaten.
+                    .graph(id='graph', style="min-height: 600px; margin: 0 auto;")
+                        
+    // Load all invTypes names
+    script(src="/js/invTypes.js")
+    script(src="/js/invRegions.js")
+
+    // initialize input fields to reset is-invalid class and refill submitted values
+    script(type='text/javascript').
+        // const names = APIResponse.map(({typeName}) => typeName); // part of object from an array: https://stackoverflow.com/questions/40069301/destructure-object-properties-inside-array-for-all-elements
+
+        $(document).ready(function () {
+
+            // gloabl Variables
+            let APIReturn = {};
+            let selectedObjectName = '';
+            let searchedObject = {};
+
+            let averages = [];
+            let ranges = [];
+            let orderCounts = [];
+            let volumes = [];
+
+            function findTypes(str) { // GET invTypes from MongoDB
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/invTypes/' + str,
+                    success: function (response) {
+                        APIReturn = response;
+                        //console.log('APIReturn: ' + JSON.stringify(APIReturn));
+                        if (APIReturn.length > 0){
+                            searchedObject = findObjectByKey(APIReturn, 'typeName', str);
+                            // has an object been found?
+                            if (searchedObject){
+                                // change picture
+                                $('#product_icon').attr('src', 'https://image.eveonline.com/Type/' + searchedObject.typeID + '_32.png');
+                                // draw graph
+                                //console.log('searchedObject: ' + JSON.stringify(searchedObject));
+                                chartData(searchedObject.typeID);
+                            //no exact match or not match
+                            } else { 
+                                // change picture
+                                $('#product_icon').attr('src', 'https://image.eveonline.com/Type/0_32.png');
+                            }
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+            // Automcomplete addon 
+            $('#product').autocomplete({
+                //minLength: 3,
+                source: function(request, response) {
+                    var results = $.ui.autocomplete.filter(invTypes, request.term);
+                    response(results.slice(0, 10));   // limit results to avoid performance issues: https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
+                },
+                select: function (event, ui){
+                    // save selected objectName
+                    selectedObjectName = ui.item.value; 
+                    // load invType via API
+                    findTypes(selectedObjectName);
+                },
+                response: function (event, ui){
+                    if (ui.content.length === 0) {
+                        $('#product_icon').attr('src', 'https://image.eveonline.com/Type/0_32.png');
+                        
+                        // Initialize variables and UI
+                        $('#product_icon').attr('src', 'https://image.eveonline.com/Type/0_32.png');
+                        $('#graph').empty();
+                        // reset variables
+                        selectedObjectName = '';
+                        searchedObject = {};
+                    } 
+                }
+            });
+
+            // Chart Data
+            function chartData(typeID){
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://crest-tq.eveonline.com/market/' + $('#region').val() + '/history/?type=https://crest-tq.eveonline.com/inventory/types/' + typeID + '/',
+                    success: function (response) {
+
+                        averages = response.items.map(({date, avgPrice}) => [((new Date(date)).getTime()), avgPrice]);
+                        ranges = response.items.map(({date, lowPrice, highPrice}) => [((new Date(date)).getTime()), lowPrice, highPrice]);
+                        orderCounts = response.items.map(({date, orderCount}) => [((new Date(date)).getTime()), orderCount]);
+                        volumes = response.items.map(({date, volume}) => [((new Date(date)).getTime()), volume]);
+
+                        // Chart Options
+                        let chartOptions = {
+                            rangeSelector: {
+                                // second button selected
+                                selected: 1
+                            },
+                            title: {
+                                // title
+                                text: selectedObjectName + ' ( ' + $('#region option:selected').html() + ' ) '
+                            },
+                            yAxis: [{ // Primary yAxis
+                                title: {
+                                    text: 'ISK pro Einheit',
+                                    style: {
+                                        color: Highcharts.getOptions().colors[0]
+                                    }
+                                },
+                                labels: {
+                                    format: '{value} ISK',
+                                    style: {
+                                        color: Highcharts.getOptions().colors[0]
+                                    }
+                                }
+                            },{ // Secondary yAxis
+                                title: {
+                                    text: 'Anzahl im Markt',
+                                    style: {
+                                        color: Highcharts.getOptions().colors[1]
+                                    }
+                                },
+                                labels: {
+                                    style: {
+                                        color: Highcharts.getOptions().colors[1]
+                                    }
+                                }
+                            },{ // Triatry yAxis
+                                title: {
+                                    text: 'Orders im Markt',
+                                    style: {
+                                        color: Highcharts.getOptions().colors[2]
+                                    }
+                                },
+                                labels: {
+                                    style: {
+                                        color: Highcharts.getOptions().colors[2]
+                                    }
+                                }
+                            }],
+                            
+                            tooltip: {
+                                crosshairs: true,
+                                split: true
+                            },
+                            series: [{
+                                name: 'Durchschnitt',
+                                data: averages,
+                                id: 'averages',
+                                zIndex: 1,
+                                marker: {
+                                    fillColor: 'white',
+                                    lineWidth: 2,
+                                    lineColor: Highcharts.getOptions().colors[0]
+                                },
+                                tooltip: {
+                                    valueSuffix: ' ISK',
+                                    valueDecimals: 2
+                                },
+                                yAxis: 0
+                            },{
+                                name: 'Bereich',
+                                data: ranges,
+                                type: 'arearange',
+                                lineWidth: 0,                                
+                                color: Highcharts.getOptions().colors[0],
+                                fillOpacity: 0.3,
+                                zIndex: 0,
+                                marker: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    valueSuffix: ' ISK',
+                                    valueDecimals: 2
+                                },
+                                yAxis: 0
+                            },{
+                                name: 'Volumen',
+                                data: volumes,
+                                type: 'column',
+                                yAxis: 1
+                            },{
+                                name: 'Orders',
+                                data: orderCounts,
+                                type: 'column',
+                                yAxis: 2
+                            }]
+                        };
+
+                        let chart1 = new Highcharts.stockChart('graph', chartOptions);
+
+                        // calculate max for y1 =  scale down to 20%
+                        new_max1 = chart1.yAxis[1].dataMax * 5;
+                        new_max2 = chart1.yAxis[2].dataMax * 5;
+                        chartOptions.yAxis[1].max = new_max1;
+                        chartOptions.yAxis[2].max = new_max2;
+                        
+                        chart1.update(chartOptions);
+
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+            // fill region drop down
+            // create array of abjects with region name as key
+            var reg_sorted = [];
+            for (id in regionname){ 
+                reg_sorted.push({
+                    [regionname[id]] : id
+                });
+            }
+            // sort by region name - https://stackoverflow.com/questions/20083324/sorting-an-array-of-objects-by-keyname-in-javascript
+            reg_sorted.sort(function(a,b){
+                return (Object.keys(a)[0] > Object.keys(b)[0]) - 0.5;
+            });
+            // fill drop down
+            for (i in reg_sorted){ // output array
+                region_name = Object.keys(reg_sorted[i])[0]; // https://stackoverflow.com/questions/6268679/best-way-to-get-the-key-of-a-key-value-javascript-object
+                region_id = reg_sorted[i][region_name];
+                if (region_name == 'The Forge'){
+                    $('#region').append('<option id="' + region_id  + '", value="' + region_id   + '" selected>' + region_name +'</option>');
+                } else {
+                    $('#region').append('<option id="' + region_id  + '", value="' + region_id   + '">' + region_name +'</option>');
+                }
+            }
+
+            // listen on changes
+            $('#region').on('change', function(e){
+                if (selectedObjectName) {
+                    findTypes(selectedObjectName);
+                }    
+            });
+            
+            //let chart1 = new Highcharts.stockChart('graph');
+        });

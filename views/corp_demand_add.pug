@@ -1,0 +1,259 @@
+extends layout
+
+block content
+    .row.justify-content-center
+        .col-lg-6
+            .card
+                .card-header
+                    i.fa.fa-sign-in
+                    | Bedarf
+                .card-body
+                    form(method='POST', action='/corp/demand_add/', id='Form')
+                        //- .form-group
+                        //-     .input-group.mb-3
+                        //-         span.input-group-addon ID
+                        //-         input.form-control(type='text', value=_id, name='id', readonly='readonly')
+                        //-         span.input-group-addon
+                        //-             i.fa.fa-id-card-o
+                        .form-group
+                            .input-group.mb-3
+                                .form-check.form-check-inline
+                                    .form-check-label 
+                                        input.form-check-input(type='radio', value='Beschaffung', name='type', id='Beschaffung' checked)
+                                        .span.badge.badge-warning Beschaffung
+                                .form-check.form-check-inline
+                                    .form-check-label 
+                                        input.form-check-input(type='radio', value='Mining', name='type', id='Mining')
+                                        .span.badge.badge-danger Mining
+                                .form-check.form-check-inline
+                                    .form-check-label 
+                                        input.form-check-input(type='radio', value='Produktion', name='type', id='Produktion')
+                                        .span.badge.badge-success Produktion
+                                .form-check.form-check-inline
+                                    .form-check-label 
+                                        input.form-check-input(type='radio', value='Transport', name='type', id='Transport')
+                                        .span.badge.badge-dark Transport
+                        p Tippe 'Anzahl' und 'Produkt' ein und füge es der Liste hinzu.
+                        .form-group
+                            .input-group.mb-3
+                                img(src='https://image.eveonline.com/Type/0_32.png', id='product_icon')
+                                input.form-control.col-lg-2(type='number', min=1, value=1, name='amount' id='amount')
+                                input.form-control.col-lg-10(type='text', value=product, name='product' id='product', placeholder='gib ein Produkt ein...')
+                                button.btn.btn-sm.btn-success(type='button' id='add') Hinzufügen
+                        p Produktliste:
+                        hr.m-3
+                        .form-group(id='list')
+                        hr.m-3
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Volumen
+                                input.form-control.text-right(type='text', value=0, name='volume', id='volume', readonly='readonly')
+                                span.input-group-addon
+                                    | m³
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Start System
+                                input.form-control(type='text', value=start_sys, name='start_sys', id='start_sys')
+                                span.input-group-addon
+                                    i.icon-graph
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Start Station
+                                input.form-control(type='text', value=start_sta, name='start_sta', id='start_sta')
+                                span.input-group-addon
+                                    i.fa.fa-square-o
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Ziel System
+                                input.form-control(type='text', value=target_sys, name='target_sys', id='target_sys')
+                                span.input-group-addon
+                                    i.icon-graph
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Ziel Station
+                                input.form-control(type='text', value=target_sta, name='target_sta', id='target_sta')
+                                span.input-group-addon
+                                    i.fa.fa-square-o
+                        .form-group
+                            .input-group.mb-3
+                                span.input-group-addon Kommentar für Bearbeiter
+                                input.form-control(type='text', value=comment, name='comment', id='comment')
+                                span.input-group-addon
+                                    i.fa.fa-question
+                        button.btn.btn-block.btn-success(type='submit') Auftrag Erstellen
+
+    // initialize input fields to reset is-invalid class and refill submitted values
+    script(type='text/javascript').
+        // const names = APIResponse.map(({typeName}) => typeName); // part of object from an array: https://stackoverflow.com/questions/40069301/destructure-object-properties-inside-array-for-all-elements
+
+        $(document).ready(function () {
+
+            // gloabl Variables
+            let APIReturn = {};
+            let selectedObjectName = '';
+            let searchedObject = {};
+            let sum_volume = 0;
+            let invtypes = [];
+            let mapsolarsystems = [];
+
+            // prepare and load invtypes
+            $.ajax({
+                type: 'GET',
+                url: '/api/invtypesall/',
+                success: function (response) {
+                    
+                    // create array
+                    for (i in response){
+                        invtypes.push(Object.keys(response[i])[0]);
+                    }
+
+                    // Automcomplete addon for invtypes
+                    $('#product').autocomplete({
+                        //minLength: 3,
+                        source: function(request, response) {
+                            var results = $.ui.autocomplete.filter(invtypes, request.term);
+                            response(results.slice(0, 10));   // limit results to avoid performance issues: https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
+                        },
+                        select: function (event, ui){
+                            // save selected objectName
+                            selectedObjectName = ui.item.value; 
+                            // load invType via API
+                            findTypes(selectedObjectName);
+                        },
+                        response: function (event, ui){
+                            if (ui.content.length === 0) {                     
+                                // Initialize variables and UI
+                                $('#product_icon').attr('src', 'https://image.eveonline.com/Type/0_32.png');
+                                // reset variables
+                                selectedObjectName = '';
+                                searchedObject = {};
+                            } 
+                        }
+                    });
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+            
+            // prepare and load mapsolarsystems
+            $.ajax({
+                type: 'GET',
+                url: '/api/mapsolarsystemsall/',
+                success: function (response) {
+
+                    // create array
+                    for (i in response){
+                        mapsolarsystems.push(Object.keys(response[i])[0]);
+                    }
+
+                    // Automcomplete addon for mapsolarsystemname
+                    $('#start_sys, #target_sys').autocomplete({
+                        //minLength: 3,
+                        source: function(request, response) {
+                            var results = $.ui.autocomplete.filter(mapsolarsystems, request.term);
+                            response(results.slice(0, 10));   // limit results to avoid performance issues: https://stackoverflow.com/questions/7617373/limit-results-in-jquery-ui-autocomplete
+                        }
+                    });
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            function findTypes(str) { // GET invTypes from MongoDB
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/invtypes/' + str,
+                    success: function (response) {
+                        APIReturn = response;
+                        //console.log('APIReturn: ' + JSON.stringify(APIReturn));
+                        if (APIReturn.length > 0){
+                            searchedObject = findObjectByKey(APIReturn, 'typeName', str);
+                            // has an object been found?
+                            if (searchedObject){
+                                // change picture
+                                $('#product_icon').attr('src', 'https://image.eveonline.com/Type/' + searchedObject.typeID + '_32.png');
+                            //no exact match or not match
+                            } else { 
+                                // change picture
+                                $('#product_icon').attr('src', 'https://image.eveonline.com/Type/0_32.png');
+                            }
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+            // calculate overall volume
+            function volume_sum(){
+                var sum = 0;
+                $('input[id^="volume_"').each(function(index){
+                    let number = parseFloat($(this).val());
+                    if (isInt(number) || isFloat(number)){
+                        sum = sum + number;
+                    }
+                });  
+                return sum;  
+            }
+
+            // add function for shopping cart
+            var next = 1;
+            $("#add").click(function(e){
+                e.preventDefault();
+
+                // check for numeric volume or replace by 0
+                let volume_int = 0;
+                if (!isNaN(searchedObject.volume)) {
+                    volume_int = searchedObject.volume;
+                } else {
+                    volume_int = 0;
+                }
+                
+                // add new form elements
+                $('#list').append('<div class="input-group mb-3" id="group' + next +'"></div>');
+                $('#group'+next).append('<img src="' + $('#product_icon').attr('src') + '" id="product_icon">');
+                $('#group'+next).append('<input class="form-control form-control-sm col-lg-2" type="number" min="1" value="' + $('#amount').val() + '" name="amount_' + next + '" id="amount_' + next + '" readonly="readonly">');
+                $('#group'+next).append('<input class="form-control form-control-sm col-lg-8" type="text" value="' + $('#product').val() + '" name="product_' + next + '" id="product_' + next + '" readonly="readonly">');
+                $('#group'+next).append('<input class="form-control form-control-sm col-lg-2 text-right" type="text" value="' + volume_int * $('#amount').val() + '" name="volume_' + next + '" id="volume_' + next + '" readonly="readonly">');
+                $('#group'+next).append('<span class="input-group-addon">m³</span>');
+                $('#group'+next).append('<button class="btn btn-sm btn-danger" type="button" id="remove" data-id="' + next + '">Entfernen</button>');
+                $('#group'+next).append('<input class="form-control" type="hidden" value="' + searchedObject.typeID  + '" name="typeID_' + next + '" id="typeID_' + next + '">');
+
+                // Initialize variables and UI
+                $('#amount').val(1);
+                $('#product').val('');
+                $('#product_icon').attr('src', 'https://image.eveonline.com/Type/0_32.png');
+                // reset variables
+                selectedObjectName = '';
+                searchedObject = {};
+                
+                // give out volume
+                sum_volume = volume_sum();
+                $('#volume').val(sum_volume);
+
+                next++;
+            });
+
+            // remove function for shopping cart
+            $(document).on('click', '#remove', function(e){
+                e.preventDefault();
+                $target = $(e.target);
+                const id = $target.attr('data-id');
+                $('#group' + id).remove();
+
+                // give out volume
+                sum_volume = volume_sum();
+                $('#volume').val(sum_volume);
+            });
+
+            // set demand type if submitted
+            var add_type = !{add_type ? JSON.stringify(add_type) : "undefined"};
+            if(add_type){
+                console.log(add_type);
+                $('#'+add_type).prop("checked", true).trigger("change");
+            }
+        });

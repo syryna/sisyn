@@ -163,11 +163,13 @@ app.get('*', function(req, res, next) {
 
 // Routes for the App
 app.get("/", ensureAuthenticated, function(req, res) {
-    // Placeholder
     httplog.info('User: ' + res.locals.user.username + ' Type: ' + req.method + ' - Prot: ' + req.protocol + ' Path: ' + req.originalUrl);
+    res.redirect('/overview/show');
 });
 
 // Route files
+let api = require('./routes/api');
+app.use('/api', api);
 let users = require('./routes/users');
 app.use('/users', users);
 let accounts = require('./routes/accounts');
@@ -178,6 +180,8 @@ let admin = require('./routes/admin');
 app.use('/admin', admin);
 let corp = require('./routes/corp');
 app.use('/corp', corp);
+let information = require('./routes/information');
+app.use('/information', information);
 
 // Access Control
 function ensureAuthenticated(req, res, next) {

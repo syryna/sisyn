@@ -402,7 +402,7 @@ router.get('/listall', ensureAuthenticated, function(req, res) {
                 }
             });
         }
-    });
+    }).sort({ username: 1 });
 });
 
 // Access Control

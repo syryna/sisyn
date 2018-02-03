@@ -1,0 +1,559 @@
+extends layout
+
+block content
+    .row
+        // Beschaffung Block
+        .col-lg-6
+            .card
+                .card-header
+                    i.fa.fa-sign-in
+                    | Verfügbare Beschaffungsaufträge
+                    .btn-group.float-right
+                        button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
+                            i.icon-settings
+                        .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='/corp/demand_add?type=Beschaffung') Auftrag Erstellen
+                .card-body
+                    table.table.table-sm
+                        //.table-responsive
+                        thead
+                            tr
+                                th 
+                                th Typ
+                                th Ziel-Sys
+                                th Erstellungsdatum
+                                th Status
+                        tbody
+                            each demand, i in demands
+                                if(demand.type == 'Beschaffung' && demand.status != 'FERTIG')
+                                    tr
+                                        td
+                                            i.fa.fa-chevron-right.expand-arrow(aria-hidden='true', data-id='group-of-rows-'+i)
+                                        td
+                                            if(demand.type == 'Mining') 
+                                                .span.badge.badge-danger= demand.type 
+                                            if(demand.type == 'Transport') 
+                                                .span.badge.badge-dark= demand.type
+                                            if(demand.type == 'Produktion') 
+                                                .span.badge.badge-success= demand.type
+                                            if(demand.type == 'Beschaffung') 
+                                                .span.badge.badge-warning= demand.type
+                                        td= demand.target_sys
+                                        td
+                                            script.
+                                                var create_date = new Date("#{demand.create_date}");
+                                                document.write(DEDate(create_date));
+                                        td
+                                            if(demand.status == 'FERTIG') 
+                                                .span.badge.badge-success FERTIG 
+                                            if(demand.status == 'IN ARBEIT') 
+                                                .span.badge.badge-warning IN ARBEIT 
+                                            if(demand.status == 'LIEFERUNG') 
+                                                .span.badge.badge-warning LIEFERUNG
+                                            if(demand.status == 'OFFEN') 
+                                                .span.badge.badge-danger OFFEN
+                                    tbody(id='group-of-rows-'+i, class='collapse')
+                                        tr
+                                            td
+                                            td(colspan='4')
+                                                table.w-100
+                                                    tr
+                                                        th Type
+                                                        td
+                                                            if(demand.type == 'Beschaffung') 
+                                                                .span.badge.badge-danger= demand.type 
+                                                            if(demand.type == 'Transport') 
+                                                                .span.badge.badge-dark= demand.type
+                                                            if(demand.type == 'Produktion') 
+                                                                .span.badge.badge-success= demand.type
+                                                            if(demand.type == 'Beschaffung') 
+                                                                .span.badge.badge-warning= demand.type
+                                                    each beschaffung_item, j in demand.items
+                                                        tr
+                                                            td(colspan=2)
+                                                                .input-group
+                                                                    img(src='https://image.eveonline.com/Type/'+beschaffung_item.typeID+'_32.png', id='product_icon')
+                                                                    input.form-control.form-control-sm.col-lg-3(type='number', min=1, value=beschaffung_item.amount, name='amount_'+j, id='amount_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-7(type='text', value=beschaffung_item.product, name='product_'+j id='product_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-2.text-right(type="text", value=beschaffung_item.volume, name="volume_"+j, id="volume_"+j, readonly="readonly")
+                                                                    span.input-group-addon m³
+                                                    tr
+                                                        th Erstellt
+                                                        td 
+                                                            script.
+                                                                var create_date = new Date("#{demand.create_date}");
+                                                                document.write(DEDate(create_date));
+                                                    tr
+                                                        th Ersteller
+                                                        td 
+                                                            img.img-avatar(src=demand.create_user_picture.toString())
+                                                            strong &nbsp; #{demand.create_user_name.toString()}
+                                                            if(user.username == demand.create_user_name.toString() || user.type == 'Admin')
+                                                                .d-flex.flex-row-reverse
+                                                                    button.btn.btn-sm.btn-danger.delete_demand(type='button', data-id=demand._id) Löschen
+                                                    tr
+                                                        th Start System
+                                                        td=demand.start_sys
+                                                    tr
+                                                        th Start Station
+                                                        td=demand.start_sta
+                                                    tr
+                                                        th Ziel System
+                                                        td=demand.target_sys
+                                                    tr
+                                                        th Ziel Station
+                                                        td=demand.target_sta
+                                                    tr
+                                                        th Kommentar
+                                                        td=demand.comment
+                                                    tr
+                                                        th Angenommen
+                                                        td
+                                                            script.
+                                                                var process_date = new Date("#{demand.process_date}");
+                                                                document.write(DEDate(process_date));
+                                                    tr
+                                                        th Bearbeiter
+                                                        td 
+                                                            img.img-avatar(src=demand.process_user_picture.toString())
+                                                            strong &nbsp; #{demand.process_user_name.toString()}
+                                                            .d-flex.flex-row-reverse
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-success.finish_demand(type='button', data-id=demand._id) Erledigt
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-danger.decline_demand(type='button', data-id=demand._id) Aufgeben
+                                                                if(user.username != demand.process_user_name.toString())
+                                                                    button.btn.btn-sm.btn-warning.accept_demand(type='button', data-id=demand._id, data-type=demand.type) Annehmen
+                                                    tr
+                                                        th Status
+                                                        td
+                                                            if(demand.status == 'FERTIG') 
+                                                                .span.badge.badge-success FERTIG 
+                                                            if(demand.status == 'IN ARBEIT') 
+                                                                .span.badge.badge-warning IN ARBEIT 
+                                                            if(demand.status == 'LIEFERUNG') 
+                                                                .span.badge.badge-warning LIEFERUNG
+                                                            if(demand.status == 'OFFEN') 
+                                                                .span.badge.badge-danger OFFEN
+        // Mining Block
+        .col-lg-6
+            .card
+                .card-header
+                    i.fa.fa-sign-in
+                    | Verfügbare Mining Aufträge
+                    .btn-group.float-right
+                        button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
+                            i.icon-settings
+                        .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='/corp/demand_add?type=Mining') Auftrag Erstellen
+                .card-body
+                    table.table.table-sm
+                        //.table-responsive
+                        thead
+                            tr
+                                th 
+                                th Typ
+                                th Ziel-Sys
+                                th Erstellungsdatum
+                                th Status
+                        tbody
+                            each demand, i in demands
+                                if(demand.type == 'Mining' && demand.status != 'FERTIG')
+                                    tr
+                                        td
+                                            i.fa.fa-chevron-right.expand-arrow(aria-hidden='true', data-id='group-of-rows-'+i)
+                                        td
+                                            if(demand.type == 'Mining') 
+                                                .span.badge.badge-danger= demand.type 
+                                            if(demand.type == 'Transport') 
+                                                .span.badge.badge-dark= demand.type
+                                            if(demand.type == 'Produktion') 
+                                                .span.badge.badge-success= demand.type
+                                            if(demand.type == 'Beschaffung') 
+                                                .span.badge.badge-warning= demand.type
+                                        td= demand.target_sys
+                                        td
+                                            script.
+                                                var create_date = new Date("#{demand.create_date}");
+                                                document.write(DEDate(create_date));
+                                        td
+                                            if(demand.status == 'FERTIG') 
+                                                .span.badge.badge-success FERTIG 
+                                            if(demand.status == 'IN ARBEIT') 
+                                                .span.badge.badge-warning IN ARBEIT 
+                                            if(demand.status == 'LIEFERUNG') 
+                                                .span.badge.badge-warning LIEFERUNG
+                                            if(demand.status == 'OFFEN') 
+                                                .span.badge.badge-danger OFFEN
+                                    tbody(id='group-of-rows-'+i, class='collapse')
+                                        tr
+                                            td
+                                            td(colspan='4')
+                                                table.w-100
+                                                    tr
+                                                        th Type
+                                                        td
+                                                            if(demand.type == 'Mining') 
+                                                                .span.badge.badge-danger= demand.type 
+                                                            if(demand.type == 'Transport') 
+                                                                .span.badge.badge-dark= demand.type
+                                                            if(demand.type == 'Produktion') 
+                                                                .span.badge.badge-success= demand.type
+                                                            if(demand.type == 'Beschaffung') 
+                                                                .span.badge.badge-warning= demand.type
+                                                    each mining_item, j in demand.items
+                                                        tr
+                                                            td(colspan=2)
+                                                                .input-group
+                                                                    img(src='https://image.eveonline.com/Type/'+mining_item.typeID+'_32.png', id='product_icon')
+                                                                    input.form-control.form-control-sm.col-lg-3(type='number', min=1, value=mining_item.amount, name='amount_'+j, id='amount_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-7(type='text', value=mining_item.product, name='product_'+j id='product_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-2.text-right(type="text", value=mining_item.volume, name="volume_"+j, id="volume_"+j, readonly="readonly")
+                                                                    span.input-group-addon m³
+                                                    tr
+                                                        th Erstellt
+                                                        td 
+                                                            script.
+                                                                var create_date = new Date("#{demand.create_date}");
+                                                                document.write(DEDate(create_date));
+                                                    tr
+                                                        th Ersteller
+                                                        td 
+                                                            img.img-avatar(src=demand.create_user_picture.toString())
+                                                            strong &nbsp; #{demand.create_user_name.toString()}
+                                                            if(user.username == demand.create_user_name.toString() || user.type == 'Admin')
+                                                                .d-flex.flex-row-reverse
+                                                                    button.btn.btn-sm.btn-danger.delete_demand(type='button', data-id=demand._id) Löschen
+                                                    tr
+                                                        th Start System
+                                                        td=demand.start_sys
+                                                    tr
+                                                        th Start Station
+                                                        td=demand.start_sta
+                                                    tr
+                                                        th Ziel System
+                                                        td=demand.target_sys
+                                                    tr
+                                                        th Ziel Station
+                                                        td=demand.target_sta
+                                                    tr
+                                                        th Kommentar
+                                                        td=demand.comment
+                                                    tr
+                                                        th Angenommen
+                                                        td
+                                                            script.
+                                                                var process_date = new Date("#{demand.process_date}");
+                                                                document.write(DEDate(process_date));
+                                                    tr
+                                                        th Bearbeiter
+                                                        td 
+                                                            img.img-avatar(src=demand.process_user_picture.toString())
+                                                            strong &nbsp; #{demand.process_user_name.toString()}
+                                                            .d-flex.flex-row-reverse
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-success.finish_demand(type='button', data-id=demand._id) Erledigt
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-danger.decline_demand(type='button', data-id=demand._id) Aufgeben
+                                                                if(user.username != demand.process_user_name.toString())
+                                                                    button.btn.btn-sm.btn-warning.accept_demand(type='button', data-id=demand._id, data-type=demand.type) Annehmen
+                                                    tr
+                                                        th Status
+                                                        td
+                                                            if(demand.status == 'FERTIG') 
+                                                                .span.badge.badge-success FERTIG 
+                                                            if(demand.status == 'IN ARBEIT') 
+                                                                .span.badge.badge-warning IN ARBEIT 
+                                                            if(demand.status == 'LIEFERUNG') 
+                                                                .span.badge.badge-warning LIEFERUNG
+                                                            if(demand.status == 'OFFEN') 
+                                                                .span.badge.badge-danger OFFEN
+    .row
+        // Produktion Block
+        .col-lg-6
+            .card
+                .card-header
+                    i.fa.fa-sign-in
+                    | Verfügbare Produktionsaufträge
+                    .btn-group.float-right
+                        button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
+                            i.icon-settings
+                        .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='/corp/demand_add?type=Produktion') Auftrag Erstellen
+                .card-body
+                    table.table.table-sm
+                        //.table-responsive
+                        thead
+                            tr
+                                th 
+                                th Typ
+                                th Ziel-Sys
+                                th Erstellungsdatum
+                                th Status
+                        tbody
+                            each demand, i in demands
+                                if(demand.type == 'Produktion' && demand.status != 'FERTIG')
+                                    tr
+                                        td
+                                            i.fa.fa-chevron-right.expand-arrow(aria-hidden='true', data-id='group-of-rows-'+i)
+                                        td
+                                            if(demand.type == 'Mining') 
+                                                .span.badge.badge-danger= demand.type 
+                                            if(demand.type == 'Transport') 
+                                                .span.badge.badge-dark= demand.type
+                                            if(demand.type == 'Produktion') 
+                                                .span.badge.badge-success= demand.type
+                                            if(demand.type == 'Beschaffung') 
+                                                .span.badge.badge-warning= demand.type
+                                        td= demand.target_sys
+                                        td
+                                            script.
+                                                var create_date = new Date("#{demand.create_date}");
+                                                document.write(DEDate(create_date));
+                                        td
+                                            if(demand.status == 'FERTIG') 
+                                                .span.badge.badge-success FERTIG 
+                                            if(demand.status == 'IN ARBEIT') 
+                                                .span.badge.badge-warning IN ARBEIT 
+                                            if(demand.status == 'LIEFERUNG') 
+                                                .span.badge.badge-warning LIEFERUNG
+                                            if(demand.status == 'OFFEN') 
+                                                .span.badge.badge-danger OFFEN
+                                    tbody(id='group-of-rows-'+i, class='collapse')
+                                        tr
+                                            td
+                                            td(colspan='4')
+                                                table.w-100
+                                                    tr
+                                                        th Type
+                                                        td
+                                                            if(demand.type == 'Mining') 
+                                                                .span.badge.badge-danger= demand.type 
+                                                            if(demand.type == 'Transport') 
+                                                                .span.badge.badge-dark= demand.type
+                                                            if(demand.type == 'Produktion') 
+                                                                .span.badge.badge-success= demand.type
+                                                            if(demand.type == 'Beschaffung') 
+                                                                .span.badge.badge-warning= demand.type
+                                                    each produktion_item, j in demand.items
+                                                        tr
+                                                            td(colspan=2)
+                                                                .input-group
+                                                                    img(src='https://image.eveonline.com/Type/'+produktion_item.typeID+'_32.png', id='product_icon')
+                                                                    input.form-control.form-control-sm.col-lg-3(type='number', min=1, value=produktion_item.amount, name='amount_'+j, id='amount_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-7(type='text', value=produktion_item.product, name='product_'+j id='product_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-2.text-right(type="text", value=produktion_item.volume, name="volume_"+j, id="volume_"+j, readonly="readonly")
+                                                                    span.input-group-addon m³
+                                                    tr
+                                                        th Erstellt
+                                                        td 
+                                                            script.
+                                                                var create_date = new Date("#{demand.create_date}");
+                                                                document.write(DEDate(create_date));
+                                                    tr
+                                                        th Ersteller
+                                                        td 
+                                                            img.img-avatar(src=demand.create_user_picture.toString())
+                                                            strong &nbsp; #{demand.create_user_name.toString()}
+                                                            if(user.username == demand.create_user_name.toString() || user.type == 'Admin')
+                                                                .d-flex.flex-row-reverse
+                                                                    button.btn.btn-sm.btn-danger.delete_demand(type='button', data-id=demand._id) Löschen
+                                                    tr
+                                                        th Start System
+                                                        td=demand.start_sys
+                                                    tr
+                                                        th Start Station
+                                                        td=demand.start_sta
+                                                    tr
+                                                        th Ziel System
+                                                        td=demand.target_sys
+                                                    tr
+                                                        th Ziel Station
+                                                        td=demand.target_sta
+                                                    tr
+                                                        th Kommentar
+                                                        td=demand.comment
+                                                    tr
+                                                        th Angenommen
+                                                        td
+                                                            script.
+                                                                var process_date = new Date("#{demand.process_date}");
+                                                                document.write(DEDate(process_date));
+                                                    tr
+                                                        th Bearbeiter
+                                                        td 
+                                                            img.img-avatar(src=demand.process_user_picture.toString())
+                                                            strong &nbsp; #{demand.process_user_name.toString()}
+                                                            .d-flex.flex-row-reverse
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-success.finish_demand(type='button', data-id=demand._id) Erledigt
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-danger.decline_demand(type='button', data-id=demand._id) Aufgeben
+                                                                if(user.username != demand.process_user_name.toString())
+                                                                    button.btn.btn-sm.btn-warning.accept_demand(type='button', data-id=demand._id, data-type=demand.type) Annehmen
+                                                    tr
+                                                        th Status
+                                                        td
+                                                            if(demand.status == 'FERTIG') 
+                                                                .span.badge.badge-success FERTIG 
+                                                            if(demand.status == 'IN ARBEIT') 
+                                                                .span.badge.badge-warning IN ARBEIT 
+                                                            if(demand.status == 'LIEFERUNG') 
+                                                                .span.badge.badge-warning LIEFERUNG
+                                                            if(demand.status == 'OFFEN') 
+                                                                .span.badge.badge-danger OFFEN
+        // Transport Block
+        .col-lg-6
+            .card
+                .card-header
+                    i.fa.fa-sign-in
+                    | Verfügbare Transport Aufträge
+                    .btn-group.float-right
+                        button.btn.btn-transparent.dropdown-toggle.text-dark.p-0(type='button', data-toggle='dropdown', arioa-haspopup='true', aria-expanded='false')
+                            i.icon-settings
+                        .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='/corp/demand_add?type=Transport') Auftrag Erstellen
+                .card-body
+                    table.table.table-sm
+                        //.table-responsive
+                        thead
+                            tr
+                                th 
+                                th Typ
+                                th Ziel-Sys
+                                th Erstellungsdatum
+                                th Status
+                        tbody
+                            each demand, i in demands
+                                if(demand.type == 'Transport' && demand.status != 'FERTIG')
+                                    tr
+                                        td
+                                            i.fa.fa-chevron-right.expand-arrow(aria-hidden='true', data-id='group-of-rows-'+i)
+                                        td
+                                            if(demand.type == 'Mining') 
+                                                .span.badge.badge-danger= demand.type 
+                                            if(demand.type == 'Transport') 
+                                                .span.badge.badge-dark= demand.type
+                                            if(demand.type == 'Produktion') 
+                                                .span.badge.badge-success= demand.type
+                                            if(demand.type == 'Beschaffung') 
+                                                .span.badge.badge-warning= demand.type
+                                        td= demand.target_sys
+                                        td
+                                            script.
+                                                var create_date = new Date("#{demand.create_date}");
+                                                document.write(DEDate(create_date));
+                                        td
+                                            if(demand.status == 'FERTIG') 
+                                                .span.badge.badge-success FERTIG 
+                                            if(demand.status == 'IN ARBEIT') 
+                                                .span.badge.badge-warning IN ARBEIT 
+                                            if(demand.status == 'LIEFERUNG') 
+                                                .span.badge.badge-warning LIEFERUNG
+                                            if(demand.status == 'OFFEN') 
+                                                .span.badge.badge-danger OFFEN
+                                    tbody(id='group-of-rows-'+i, class='collapse')
+                                        tr
+                                            td
+                                            td(colspan='4')
+                                                table.w-100
+                                                    tr
+                                                        th Type
+                                                        td
+                                                            if(demand.type == 'Mining') 
+                                                                .span.badge.badge-danger= demand.type 
+                                                            if(demand.type == 'Transport') 
+                                                                .span.badge.badge-dark= demand.type
+                                                            if(demand.type == 'Produktion') 
+                                                                .span.badge.badge-success= demand.type
+                                                            if(demand.type == 'Beschaffung') 
+                                                                .span.badge.badge-warning= demand.type
+                                                    each transport_item, j in demand.items
+                                                        tr
+                                                            td(colspan=2)
+                                                                .input-group
+                                                                    img(src='https://image.eveonline.com/Type/'+transport_item.typeID+'_32.png', id='product_icon')
+                                                                    input.form-control.form-control-sm.col-lg-3(type='number', min=1, value=transport_item.amount, name='amount_'+j, id='amount_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-7(type='text', value=transport_item.product, name='product_'+j id='product_'+j, readonly="readonly")
+                                                                    input.form-control.form-control-sm.col-lg-2.text-right(type="text", value=transport_item.volume, name="volume_"+j, id="volume_"+j, readonly="readonly")
+                                                                    span.input-group-addon m³
+                                                    tr
+                                                        th Erstellt
+                                                        td 
+                                                            script.
+                                                                var create_date = new Date("#{demand.create_date}");
+                                                                document.write(DEDate(create_date));
+                                                    tr
+                                                        th Ersteller
+                                                        td 
+                                                            img.img-avatar(src=demand.create_user_picture.toString())
+                                                            strong &nbsp; #{demand.create_user_name.toString()}
+                                                            if(user.username == demand.create_user_name.toString() || user.type == 'Admin')
+                                                                .d-flex.flex-row-reverse
+                                                                    button.btn.btn-sm.btn-danger.delete_demand(type='button', data-id=demand._id) Löschen
+                                                    tr
+                                                        th Start System
+                                                        td=demand.start_sys
+                                                    tr
+                                                        th Start Station
+                                                        td=demand.start_sta
+                                                    tr
+                                                        th Ziel System
+                                                        td=demand.target_sys
+                                                    tr
+                                                        th Ziel Station
+                                                        td=demand.target_sta
+                                                    tr
+                                                        th Kommentar
+                                                        td=demand.comment
+                                                    tr
+                                                        th Angenommen
+                                                        td
+                                                            script.
+                                                                var process_date = new Date("#{demand.process_date}");
+                                                                document.write(DEDate(process_date));
+                                                    tr
+                                                        th Bearbeiter
+                                                        td 
+                                                            img.img-avatar(src=demand.process_user_picture.toString())
+                                                            strong &nbsp; #{demand.process_user_name.toString()}
+                                                            .d-flex.flex-row-reverse
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-success.finish_demand(type='button', data-id=demand._id) Erledigt
+                                                                if(user.username == demand.process_user_name.toString())                                                                    
+                                                                    button.btn.btn-sm.btn-danger.decline_demand(type='button', data-id=demand._id) Aufgeben
+                                                                if(user.username != demand.process_user_name.toString())
+                                                                    button.btn.btn-sm.btn-warning.accept_demand(type='button', data-id=demand._id, data-type=demand.type) Annehmen
+                                                    tr
+                                                        th Status
+                                                        td
+                                                            if(demand.status == 'FERTIG') 
+                                                                .span.badge.badge-success FERTIG 
+                                                            if(demand.status == 'IN ARBEIT') 
+                                                                .span.badge.badge-warning IN ARBEIT 
+                                                            if(demand.status == 'LIEFERUNG') 
+                                                                .span.badge.badge-warning LIEFERUNG
+                                                            if(demand.status == 'OFFEN') 
+                                                                .span.badge.badge-danger OFFEN
+
+    script.
+        $(document).ready(function () {
+            
+            // click on expand to show details
+            $('.expand-arrow').on('click', function (e) {
+                e.preventDefault();
+                
+                // context
+                $target = $(e.target);
+                const id = $target.attr('data-id');
+
+                // toggle chevron
+                $target.toggleClass('fa-chevron-right');
+                $target.toggleClass('fa-chevron-down');
+
+                // toggle show
+                $('#' + id).toggleClass('show');
+            });   
+                                  
+        });
+                                

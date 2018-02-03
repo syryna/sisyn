@@ -13,9 +13,13 @@ html(lang='en')
         link(href='/fonts/font-awesome.min.css', rel='stylesheet')
         link(href='/fonts/simple-line-icons.css', rel='stylesheet')
         // Main styles for this application
+        link(href='/css/jquery-ui.1.12.1.css', rel='stylesheet')
         link(href='/css/style.css', rel='stylesheet')
         // Bootstrap and necessary plugins
+        script(src='https://code.highcharts.com/stock/highstock.js')
+        script(src='https://code.highcharts.com/highcharts-more.js')
         script(src='/js/jquery-3.2.1.min.js')
+        script(src='/js/jquery-ui.1.12.1.js')
         script(src='/js/popper.1.12.8.js')
         script(src='/js/bootstrap.min.js')
         script(src='/js/pace.min.js')
@@ -92,17 +96,17 @@ html(lang='en')
                                 span.badge.badge-pill.badge-primary NEU
                         li.nav-title Fly-Safe
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.icon-graph
                                     |  Null-Sec Status
                                     //span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.icon-graph
                                     |  Wurmloch Status
                                     //span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.icon-bell
                                     |  Kriegsstatus
                                     //span.badge.badge-pill.badge-primary NEU
@@ -113,44 +117,44 @@ html(lang='en')
                                     |  Corp Mitglieder
                                     span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.fa.fa-cubes
                                     |  Lager Status
                                     //span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='/corp/demand')
+                                a.nav-link(href='/corp/demand_show')
                                     i.fa.fa-sign-in
                                     |  Bedarf
-                                    span.badge.badge-pill.badge-warning WORK
+                                    span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.fa.fa-industry
                                     |  Industrie
                                     //span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.icon-chemistry
                                     |  Forschung
                                     //span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.icon-equalizer
                                     |  Fuel Status
                                     //span.badge.badge-pill.badge-primary NEU
                         li.nav-title Persönlich
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.fa.fa-area-chart
                                     |  PI Status
-                                    span.badge.badge-pill.badge-warning WORK
+                                    span.badge.badge-pill.badge-warning IN ARBEIT
                         li.nav-title Information
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link(href='/information/hub_prices_show')
                                     i.fa.fa-area-chart
                                     |  Hub Preise
-                                    //span.badge.badge-pill.badge-primary NEU
+                                    span.badge.badge-pill.badge-primary NEU
                             li.nav-item
-                                a.nav-link(href='#')
+                                a.nav-link.nav-link-dark.text-muted(href='#' disabled)
                                     i.icon-user
                                     |  Spieler Information
                                     //span.badge.badge-pill.badge-primary NEU
